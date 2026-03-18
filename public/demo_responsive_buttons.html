@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bamania's Cine AI - Responsive Buttons Demo</title>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Responsive Buttons CSS -->
+    <link href="css/responsive_buttons.css" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+            min-height: 100vh;
+            padding: 2rem;
+            color: #e2e8f0;
+        }
+        
+        .demo-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .demo-section {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 1rem;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .project-card-demo {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            max-width: 350px;
+        }
+        
+        .device-frame {
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 1rem;
+            padding: 1rem;
+            margin: 1rem 0;
+        }
+        
+        .mobile-frame {
+            max-width: 375px;
+            margin: 0 auto;
+        }
+        
+        .tablet-frame {
+            max-width: 768px;
+            margin: 0 auto;
+        }
+        
+        .desktop-frame {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+        }
+        
+        h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #e2e8f0;
+            margin-bottom: 1rem;
+        }
+        
+        .responsive-label {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            background: rgba(102, 126, 234, 0.2);
+            border-radius: 0.5rem;
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+        
+        code {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.25rem;
+            font-family: 'Courier New', monospace;
+            font-size: 0.875rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="demo-container">
+        <h1><i class="fas fa-mobile-alt"></i> Bamania's Cine AI - Responsive Buttons Demo</h1>
+        <p style="margin-bottom: 2rem; color: #94a3b8;">See how action buttons adapt across different screen sizes</p>
+        
+        <!-- Desktop View -->
+        <div class="demo-section">
+            <h2><i class="fas fa-desktop"></i> Desktop View (1200px+)</h2>
+            <span class="responsive-label">Buttons show icons + text, horizontal layout</span>
+            <div class="device-frame desktop-frame">
+                <div class="project-card-demo">
+                    <div style="background: linear-gradient(135deg, #667eea20, #764ba220); height: 150px; border-radius: 0.5rem; margin-bottom: 1rem; display: flex; align-items: center; justify-content: center;">
+                        <i class="fas fa-video text-3x1" style="color: #667eea;"></i>
+                    </div>
+                    <h3 style="margin-bottom: 0.5rem; font-weight: 600;">Morning Routine Success</h3>
+                    <p style="font-size: 0.875rem; color: #94a3b8; margin-bottom: 1rem;">67s • 12.4 MB • Hindi</p>
+                    <div class="project-actions">
+                        <button class="action-btn btn-view">
+                            <i class="fas fa-eye btn-icon"></i>
+                            <span class="btn-text">View</span>
+                        </button>
+                        <button class="action-btn btn-share">
+                            <i class="fas fa-share-alt btn-icon"></i>
+                            <span class="btn-text">Share</span>
+                        </button>
+                        <button class="action-btn btn-download">
+                            <i class="fas fa-download btn-icon"></i>
+                            <span class="btn-text">Download</span>
+                        </button>
+                        <button class="action-btn btn-delete">
+                            <i class="fas fa-trash btn-icon"></i>
+                            <span class="btn-text">Delete</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Tablet View -->
+        <div class="demo-section">
+            <h2><i class="fas fa-tablet-alt"></i> Tablet View (768px - 1199px)</h2>
+            <span class="responsive-label">Buttons show icons + text, horizontal layout</span>
+            <div class="device-frame tablet-frame">
+                <div class="project-card-demo">
+                    <div style="background: linear-gradient(135deg, #667eea20, #764ba220); height: 150px; border-radius: 0.5rem; margin-bottom: 1rem; display: flex; align-items: center; justify-content: center;">
+                        <i class="fas fa-video text-3xl" style="color: #667eea;"></i>
+                    </div>
+                    <h3 style="margin-bottom: 0.5rem; font-weight: 600;">Morning Routine Success</h3>
+                    <p style="font-size: 0.875rem; color: #94a3b8; margin-bottom: 1rem;">67s • 12.4 MB • Hindi</p>
+                    <div class="project-actions">
+                        <button class="action-btn btn-view">
+                            <i class="fas fa-eye btn-icon"></i>
+                            <span class="btn-text">View</span>
+                        </button>
+                        <button class="action-btn btn-share">
+                            <i class="fas fa-share-alt btn-icon"></i>
+                            <span class="btn-text">Share</span>
+                        </button>
+                        <button class="action-btn btn-download">
+                            <i class="fas fa-download btn-icon"></i>
+                            <span class="btn-text">Download</span>
+                        </button>
+                        <button class="action-btn btn-delete">
+                            <i class="fas fa-trash btn-icon"></i>
+                            <span class="btn-text">Delete</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Mobile View -->
+        <div class="demo-section">
+            <h2><i class="fas fa-mobile-alt"></i> Mobile View (< 768px)</h2>
+            <span class="responsive-label">Buttons show icons only, horizontal layout with larger tap targets</span>
+            <div class="device-frame mobile-frame">
+                <div class="project-card-demo" style="max-width: 100%;">
+                    <div style="background: linear-gradient(135deg, #667eea20, #764ba220); height: 150px; border-radius: 0.5rem; margin-bottom: 1rem; display: flex; align-items: center; justify-content: center;">
+                        <i class="fas fa-video text-3xl" style="color: #667eea;"></i>
+                    </div>
+                    <h3 style="margin-bottom: 0.5rem; font-weight: 600; font-size: 1rem;">Morning Routine Success</h3>
+                    <p style="font-size: 0.75rem; color: #94a3b8; margin-bottom: 1rem;">67s • 12.4 MB • Hindi</p>
+                    <div class="project-actions">
+                        <button class="action-btn btn-view" title="View Video">
+                            <i class="fas fa-eye btn-icon"></i>
+                            <span class="btn-text">View</span>
+                        </button>
+                        <button class="action-btn btn-share" title="Share Video">
+                            <i class="fas fa-share-alt btn-icon"></i>
+                            <span class="btn-text">Share</span>
+                        </button>
+                        <button class="action-btn btn-download" title="Download Video">
+                            <i class="fas fa-download btn-icon"></i>
+                            <span class="btn-text">Download</span>
+                        </button>
+                        <button class="action-btn btn-delete" title="Delete Video">
+                            <i class="fas fa-trash btn-icon"></i>
+                            <span class="btn-text">Delete</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Extra Small Mobile View -->
+        <div class="demo-section">
+            <h2><i class="fas fa-mobile"></i> Extra Small Mobile (< 480px)</h2>
+            <span class="responsive-label">Buttons show large icons only, 2-column grid layout</span>
+            <div class="device-frame mobile-frame" style="max-width: 320px;">
+                <div class="project-card-demo" style="max-width: 100%;">
+                    <div style="background: linear-gradient(135deg, #667eea20, #764ba220); height: 120px; border-radius: 0.5rem; margin-bottom: 1rem; display: flex; align-items: center; justify-content: center;">
+                        <i class="fas fa-video text-2xl" style="color: #667eea;"></i>
+                    </div>
+                    <h3 style="margin-bottom: 0.5rem; font-weight: 600; font-size: 0.875rem;">Morning Routine Success</h3>
+                    <p style="font-size: 0.75rem; color: #94a3b8; margin-bottom: 1rem;">67s • 12.4 MB • Hindi</p>
+                    <div class="project-actions">
+                        <button class="action-btn btn-view" title="View Video">
+                            <i class="fas fa-eye btn-icon"></i>
+                            <span class="btn-text">View</span>
+                        </button>
+                        <button class="action-btn btn-share" title="Share Video">
+                            <i class="fas fa-share-alt btn-icon"></i>
+                            <span class="btn-text">Share</span>
+                        </button>
+                        <button class="action-btn btn-download" title="Download Video">
+                            <i class="fas fa-download btn-icon"></i>
+                            <span class="btn-text">Download</span>
+                        </button>
+                        <button class="action-btn btn-delete" title="Delete Video">
+                            <i class="fas fa-trash btn-icon"></i>
+                            <span class="btn-text">Delete</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Implementation Guide -->
+        <div class="demo-section">
+            <h2><i class="fas fa-code"></i> Implementation Details</h2>
+            
+            <h3 style="margin-top: 1.5rem; margin-bottom: 0.5rem; font-weight: 600;">CSS Classes Used:</h3>
+            <ul style="margin-left: 1.5rem; margin-bottom: 1.5rem; line-height: 1.8;">
+                <li><code>.action-btn</code> - Base button styles</li>
+                <li><code>.btn-view</code> - View button (blue gradient)</li>
+                <li><code>.btn-share</code> - Share button (cyan gradient)</li>
+                <li><code>.btn-download</code> - Download button (green gradient)</li>
+                <li><code>.btn-delete</code> - Delete button (red gradient)</li>
+                <li><code>.btn-icon</code> - Icon styling</li>
+                <li><code>.btn-text</code> - Text label (hidden on mobile)</li>
+            </ul>
+            
+            <h3 style="margin-bottom: 0.5rem; font-weight: 600;">Responsive Behavior:</h3>
+            <ul style="margin-left: 1.5rem; margin-bottom: 1.5rem; line-height: 1.8;">
+                <li><strong>Desktop (≥768px):</strong> Icons + Text, horizontal layout</li>
+                <li><strong>Mobile (<768px):</strong> Icons only, horizontal layout</li>
+                <li><strong>Extra Small (<480px):</strong> Large icons, 2-column grid</li>
+                <li><strong>Touch:</strong> 44px minimum tap targets, active states</li>
+                <li><strong>Accessibility:</strong> Keyboard navigation, ARIA labels</li>
+            </ul>
+            
+            <h3 style="margin-bottom: 0.5rem; font-weight: 600;">How to Use:</h3>
+            <pre style="background: rgba(0,0,0,0.3); padding: 1rem; border-radius: 0.5rem; overflow-x: auto;"><code>&lt;div class="project-actions"&gt;
+  &lt;button class="action-btn btn-view" onclick="viewVideo()"&gt;
+    &lt;i class="fas fa-eye btn-icon"&gt;&lt;/i&gt;
+    &lt;span class="btn-text"&gt;View&lt;/span&gt;
+  &lt;/button&gt;
+  &lt;button class="action-btn btn-share" onclick="shareVideo()"&gt;
+    &lt;i class="fas fa-share-alt btn-icon"&gt;&lt;/i&gt;
+    &lt;span class="btn-text"&gt;Share&lt;/span&gt;
+  &lt;/button&gt;
+  &lt;button class="action-btn btn-download" onclick="downloadVideo()"&gt;
+    &lt;i class="fas fa-download btn-icon"&gt;&lt;/i&gt;
+    &lt;span class="btn-text"&gt;Download&lt;/span&gt;
+  &lt;/button&gt;
+  &lt;button class="action-btn btn-delete" onclick="deleteVideo()"&gt;
+    &lt;i class="fas fa-trash btn-icon"&gt;&lt;/i&gt;
+    &lt;span class="btn-text"&gt;Delete&lt;/span&gt;
+  &lt;/button&gt;
+&lt;/div&gt;</code></pre>
+        </div>
+        
+        <!-- Performance Notes -->
+        <div class="demo-section">
+            <h2><i class="fas fa-tachometer-alt"></i> Performance & Accessibility</h2>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin-top: 1rem;">
+                <div>
+                    <h3 style="color: #667eea; margin-bottom: 0.5rem;"><i class="fas fa-mobile"></i> Touch Targets</h3>
+                    <p style="font-size: 0.875rem; color: #94a3b8;">All buttons have minimum 44x44px tap targets for easy mobile interaction</p>
+                </div>
+                <div>
+                    <h3 style="color: #667eea; margin-bottom: 0.5rem;"><i class="fas fa-universal-access"></i> Accessibility</h3>
+                    <p style="font-size: 0.875rem; color: #94a3b8;">Full keyboard navigation, ARIA labels, and screen reader support</p>
+                </div>
+                <div>
+                    <h3 style="color: #667eea; margin-bottom: 0.5rem;"><i class="fas fa-bolt"></i> Performance</h3>
+                    <p style="font-size: 0.875rem; color: #94a3b8;">Optimized CSS with minimal reflows and GPU-accelerated animations</p>
+                </div>
+                <div>
+                    <h3 style="color: #667eea; margin-bottom: 0.5rem;"><i class="fas fa-paint-brush"></i> Design</h3>
+                    <p style="font-size: 0.875rem; color: #94a3b8;">Glass-morphism design with consistent hover and active states</p>
+                </div>
+            </div>
+        </div>
+        
+        <footer style="text-align: center; margin-top: 3rem; padding-top: 2rem; border-top: 1px solid rgba(255,255,255,0.1); color: #94a3b8;">
+            <p><i class="fas fa-copyright"></i> 2024 Bamania's Cine AI. All rights reserved.</p>
+            <p style="margin-top: 0.5rem; font-size: 0.875rem;">AI-Powered Cinematic Video Studio</p>
+        </footer>
+    </div>
+    
+    <script>
+        // Add click handlers for demo
+        document.querySelectorAll('.action-btn').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.preventDefault();
+                const action = this.querySelector('.btn-text').textContent;
+                
+                // Show loading state
+                this.classList.add('loading');
+                this.disabled = true;
+                
+                // Simulate action
+                setTimeout(() => {
+                    this.classList.remove('loading');
+                    this.classList.add('success');
+                    
+                    setTimeout(() => {
+                        this.classList.remove('success');
+                        this.disabled = false;
+                    }, 1000);
+                }, 1500);
+                
+                console.log(`${action} clicked!`);
+            });
+        });
+        
+        // Add touch feedback for mobile
+        document.querySelectorAll('.action-btn').forEach(btn => {
+            btn.addEventListener('touchstart', function() {
+                this.style.transform = 'scale(0.95)';
+            });
+            
+            btn.addEventListener('touchend', function() {
+                this.style.transform = '';
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>स्टूडियो - Cinematic AI Factory | Preview</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        .glass {
+            background: rgba(30, 30, 50, 0.7);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .gradient-text {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .pulse-animation {
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        .demo-video-container {
+            aspect-ratio: 9/16;
+            max-width: 300px;
+        }
+        .workflow-step {
+            transition: all 0.3s ease;
+        }
+        .workflow-step:hover {
+            transform: translateY(-5px);
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-white font-sans">
+    <!-- Header -->
+    <header class="glass p-4 sticky top-0 z-50">
+        <div class="flex justify-between items-center max-w-7xl mx-auto">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg flex items-center justify-center">
+                    <i class="fas fa-robot text-white text-lg"></i>
+                </div>
+                <div>
+                    <h1 class="text-xl font-bold gradient-text">स्टूडियो</h1>
+                    <p class="text-xs text-gray-400">Cinematic AI Factory</p>
+                </div>
+            </div>
+            <div class="flex items-center space-x-4">
+                <a href="dashboard_pro.html" class="px-3 py-2 text-gray-300 hover:text-white flex items-center space-x-2 transition">
+                    <i class="fas fa-home"></i>
+                    <span class="hidden sm:inline">Home</span>
+                </a>
+                <span class="text-sm text-green-400">● System Online</span>
+                <button class="px-4 py-2 bg-purple-600 rounded-lg hover:bg-purple-700 transition">Live Preview</button>
+            </div>
+        </div>
+    </header>
+
+    <div class="max-w-7xl mx-auto p-6">
+        <!-- Hero Section -->
+        <div class="text-center mb-8">
+            <h2 class="text-4xl font-bold mb-4 gradient-text">AI-Powered Hindi Video Studio</h2>
+            <p class="text-gray-400 text-lg">Generate cinematic videos in Hindi with English UI control</p>
+        </div>
+
+        <!-- Live Demo Section -->
+        <div class="glass rounded-2xl p-8 mb-8">
+            <h3 class="text-2xl font-bold mb-6 flex items-center">
+                <i class="fas fa-play-circle text-purple-400 mr-3"></i>
+                Live Demo: Hindi Content Generation
+            </h3>
+            
+            <div class="grid md:grid-cols-2 gap-8">
+                <!-- Left: Dashboard Preview -->
+                <div>
+                    <h4 class="text-lg font-semibold mb-4 text-purple-300">English Dashboard</h4>
+                    <div class="bg-gray-800 rounded-lg p-4 space-y-3">
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-300">Selected Topic:</span>
+                            <span class="text-white font-medium">"सफलता की कहानी"</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-300">Language:</span>
+                            <span class="bg-green-900 text-green-300 px-2 py-1 rounded text-sm">Hindi</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-300">Duration:</span>
+                            <span class="text-white">60-90 seconds</span>
+                        </div>
+                        <button class="w-full mt-4 bg-purple-600 py-2 rounded-lg hover:bg-purple-700 transition">
+                            <i class="fas fa-magic mr-2"></i>Generate Video
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Right: Generated Content Preview -->
+                <div>
+                    <h4 class="text-lg font-semibold mb-4 text-green-300">Generated Hindi Content</h4>
+                    <div class="bg-gray-800 rounded-lg p-4">
+                        <div class="mb-3">
+                            <span class="text-xs text-gray-500 uppercase">Title</span>
+                            <p class="text-white font-semibold">"सफलता के लिए सुबह की 5 आदतें"</p>
+                        </div>
+                        <div class="mb-3">
+                            <span class="text-xs text-gray-500 uppercase">Scene 1</span>
+                            <p class="text-green-300 text-sm">"नमस्ते दोस्तों! सफल लोगों की रूटीन जानना चाहते हैं?"</p>
+                        </div>
+                        <div>
+                            <span class="text-xs text-gray-500 uppercase">Caption</span>
+                            <p class="text-yellow-300 text-sm">दोस्तों, ये 5 आदतें बदल देंगी आपकी जिंदगी! 🔥</p>
+                            <p class="text-blue-300 text-xs mt-1">#सफलता #मोटिवेशन</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Workflow Visualization -->
+        <div class="glass rounded-2xl p-8 mb-8">
+            <h3 class="text-2xl font-bold mb-6">
+                <i class="fas fa-project-diagram text-purple-400 mr-3"></i>
+                Automation Pipeline
+            </h3>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div class="workflow-step glass rounded-lg p-4 text-center">
+                    <div class="w-12 h-12 bg-red-500 rounded-full flex items-center justify-center mx-auto mb-3">
+                        <i class="fas fa-fire text-white"></i>
+                    </div>
+                    <h5 class="font-semibold mb-2">Trending Scraper</h5>
+                    <p class="text-sm text-gray-400">Collect viral topics from YouTube, Twitter, Google</p>
+                </div>
+                
+                <div class="workflow-step glass rounded-lg p-4 text-center">
+                    <div class="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center mx-auto mb-3">
+                        <i class="fas fa-scroll text-white"></i>
+                    </div>
+                    <h5 class="font-semibold mb-2">AI Script Generator</h5>
+                    <p class="text-sm text-gray-400">Create viral Hindi scripts (8-12 scenes)</p>
+                </div>
+                
+                <div class="workflow-step glass rounded-lg p-4 text-center">
+                    <div class="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-3">
+                        <i class="fas fa-photo-video text-white"></i>
+                    </div>
+                    <h5 class="font-semibold mb-2">Cinematic Composer</h5>
+                    <p class="text-sm text-gray-400">Add effects, transitions, color grading</p>
+                </div>
+                
+                <div class="workflow-step glass rounded-lg p-4 text-center">
+                    <div class="w-12 h-12 bg-purple-500 rounded-full flex items-center justify-center mx-auto mb-3">
+                        <i class="fas fa-rocket text-white"></i>
+                    </div>
+                    <h5 class="font-semibold mb-2">Auto Publisher</h5>
+                    <p class="text-sm text-gray-400">Post to YouTube, Instagram, TikTok</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Video Preview Section -->
+        <div class="glass rounded-2xl p-8 mb-8">
+            <h3 class="text-2xl font-bold mb-6">
+                <i class="fas fa-film text-purple-400 mr-3"></i>
+                Sample Cinematic Video Output
+            </h3>
+            
+            <div class="grid md:grid-cols-3 gap-6">
+                <!-- Video Player Mock -->
+                <div class="md:col-span-2">
+                    <div class="demo-video-container bg-black rounded-lg overflow-hidden mx-auto">
+                        <div class="h-full flex items-center justify-center bg-gradient-to-br from-purple-900 to-pink-900">
+                            <div class="text-center p-4">
+                                <i class="fas fa-play-circle text-6xl text-white mb-4"></i>
+                                <p class="text-white font-bold mb-2">Sample Cinematic Video</p>
+                                <p class="text-gray-300 text-sm">9:16 • 60 seconds • Hindi</p>
+                                <div class="mt-4 flex justify-center space-x-2">
+                                    <span class="bg-purple-600 px-2 py-1 rounded text-xs">Cinematic Blue</span>
+                                    <span class="bg-green-600 px-2 py-1 rounded text-xs">Ken Burns</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Video Details -->
+                <div class="space-y-4">
+                    <div class="bg-gray-800 rounded p-4">
+                        <h5 class="font-semibold mb-2">Video Specifications</h5>
+                        <ul class="text-sm text-gray-400 space-y-1">
+                            <li>• Resolution: 1080x1920 (9:16)</li>
+                            <li>• Duration: 60-90 seconds</li>
+                            <li>• Language: Hindi</li>
+                            <li>• Subtitles: Hindi (burned-in)</li>
+                            <li>• Effects: Cinematic grading</li>
+                            <li>• Audio: Voice + Background music</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="bg-gray-800 rounded p-4">
+                        <h5 class="font-semibold mb-2">Content Details</h5>
+                        <ul class="text-sm text-gray-400 space-y-1">
+                            <li>• Scenes: 8-12 per video</li>
+                            <li>• Images: Cinematic visuals</li>
+                            <li>• Voice: Natural Hindi TTS</li>
+                            <li>• Captions: Viral Hindi text</li>
+                            <li>• Hashtags: Trending</li>
+                            <li>• Thumbnail: Auto-generated</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Real-time Metrics -->
+        <div class="glass rounded-2xl p-8 mb-8">
+            <h3 class="text-2xl font-bold mb-6">
+                <i class="fas fa-chart-line text-purple-400 mr-3"></i>
+                Live System Metrics
+            </h3>
+            
+            <div class="grid md:grid-cols-4 gap-4 mb-6">
+                <div class="bg-gray-800 rounded-lg p-4 text-center">
+                    <div class="text-3xl font-bold text-purple-400">127</div>
+                    <div class="text-sm text-gray-400">Videos Generated</div>
+                </div>
+                <div class="bg-gray-800 rounded-lg p-4 text-center">
+                    <div class="text-3xl font-bold text-green-400">89%</div>
+                    <div class="text-sm text-gray-400">Success Rate</div>
+                </div>
+                <div class="bg-gray-800 rounded-lg p-4 text-center">
+                    <div class="text-3xl font-bold text-blue-400">23</div>
+                    <div class="text-sm text-gray-400">Active Jobs</div>
+                </div>
+                <div class="bg-gray-800 rounded-lg p-4 text-center">
+                    <div class="text-3xl font-bold text-yellow-400">1.2M</div>
+                    <div class="text-sm text-gray-400">Total Views</div>
+                </div>
+            </div>
+            
+            <div class="bg-gray-800 rounded-lg p-4">
+                <canvas id="metricsChart" width="400" height="150"></canvas>
+            </div>
+        </div>
+
+        <!-- Recent Activity Feed -->
+        <div class="glass rounded-2xl p-8">
+            <h3 class="text-2xl font-bold mb-6">
+                <i class="fas fa-history text-purple-400 mr-3"></i>
+                Recent Activity
+            </h3>
+            
+            <div class="space-y-4">
+                <div class="bg-gray-800 rounded-lg p-4 flex items-center justify-between">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-3 h-3 bg-green-500 rounded-full pulse-animation"></div>
+                        <div>
+                            <p class="text-white font-medium">Video #128 completed</p>
+                            <p class="text-gray-400 text-sm">Topic: "सुबह की रूटीन" • 67 seconds</p>
+                        </div>
+                    </div>
+                    <div class="text-green-400 text-sm">Success</div>
+                </div>
+                
+                <div class="bg-gray-800 rounded-lg p-4 flex items-center justify-between">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-3 h-3 bg-blue-500 rounded-full"></div>
+                        <div>
+                            <p class="text-white font-medium">Trending scraper running</p>
+                            <p class="text-gray-400 text-sm">Collecting viral topics from YouTube...</p>
+                        </div>
+                    </div>
+                    <div class="text-blue-400 text-sm">In Progress</div>
+                </div>
+                
+                <div class="bg-gray-800 rounded-lg p-4 flex items-center justify-between">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-3 h-3 bg-yellow-500 rounded-full pulse-animation"></div>
+                        <div>
+                            <p class="text-white font-medium">Video #129 rendering</p>
+                            <p class="text-gray-400 text-sm">Topic: "पैसे बचाने के तरीके" • Progress: 78%</p>
+                        </div>
+                    </div>
+                    <div class="text-yellow-400 text-sm">Rendering</div>
+                </div>
+                
+                <div class="bg-gray-800 rounded-lg p-4 flex items-center justify-between">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-3 h-3 bg-purple-500 rounded-full"></div>
+                        <div>
+                            <p class="text-white font-medium">Script generation queued</p>
+                            <p class="text-gray-400 text-sm">Topic: "हेल्दी डाइट टिप्स" • Position: 5</p>
+                        </div>
+                    </div>
+                    <div class="text-purple-400 text-sm">Queued</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="mt-8 text-center space-x-4">
+            <button onclick="window.open('dashboard_pro.html', '_blank')" class="px-8 py-3 bg-purple-600 rounded-lg hover:bg-purple-700 transition font-semibold">
+                <i class="fas fa-external-link-alt mr-2"></i>Open Dashboard
+            </button>
+            <button onclick="showDemoVideo()" class="px-8 py-3 bg-gray-700 rounded-lg hover:bg-gray-600 transition font-semibold">
+                <i class="fas fa-video mr-2"></i>View Sample Video
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Initialize chart
+        const ctx = document.getElementById('metricsChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                datasets: [{
+                    label: 'Videos Generated',
+                    data: [12, 19, 15, 22, 28, 18, 23],
+                    borderColor: 'rgb(147, 51, 234)',
+                    backgroundColor: 'rgba(147, 51, 234, 0.1)',
+                    tension: 0.4
+                }, {
+                    label: 'Total Views',
+                    data: [120, 190, 150, 220, 280, 180, 230],
+                    borderColor: 'rgb(34, 197, 94)',
+                    backgroundColor: 'rgba(34, 197, 94, 0.1)',
+                    tension: 0.4,
+                    yAxisID: 'y1'
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        labels: {
+                            color: '#e5e7eb'
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        ticks: {
+                            color: '#9ca3af'
+                        },
+                        grid: {
+                            color: 'rgba(156, 163, 175, 0.1)'
+                        }
+                    },
+                    y: {
+                        ticks: {
+                            color: '#9ca3af'
+                        },
+                        grid: {
+                            color: 'rgba(156, 163, 175, 0.1)'
+                        }
+                    },
+                    y1: {
+                        type: 'linear',
+                        display: true,
+                        position: 'right',
+                        ticks: {
+                            color: '#9ca3af'
+                        },
+                        grid: {
+                            drawOnChartArea: false
+                        }
+                    }
+                }
+            }
+        });
+
+        function showDemoVideo() {
+            alert('Demo video would play here!\n\nShowing a 60-second cinematic video in Hindi with:\n\n✨ Cinematic Blue color grading\n🎬 Ken Burns effects\n🎵 Hindi voice narration\n🏷️ Hindi subtitles & captions\n🔥 Viral hashtags\n\nThe dashboard generates this automatically from trending topics!');
+        }
+
+        // Add some live animation effects
+        setInterval(() => {
+            const pulseElements = document.querySelectorAll('.pulse-animation');
+            pulseElements.forEach(el => {
+                el.style.opacity = Math.random() > 0.5 ? '1' : '0.5';
+            });
+        }, 1000);
+    </script>
+</body>
+</html>

@@ -1,0 +1,58 @@
+# Dependencies
+node_modules/
+frontend/node_modules/
+automation-engine/node_modules/
+
+# Build outputs
+dist/
+build/
+coverage/
+.vite/
+frontend/.next/
+frontend/out/
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+.venv/
+venv/
+env/
+.pytest_cache/
+.mypy_cache/
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+*.log
+
+# OS / Editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Vercel
+.vercel/
+
+# Temporary / generated media
+output/
+uploads/
+*.mp4
+*.mp3
+*.wav
+*.avi
+*.mov
+*.mkv
+
+# Misc
+*.tsbuildinfo

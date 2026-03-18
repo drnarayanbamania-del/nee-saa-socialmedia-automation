@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bamania's Cine AI | Social Media Manager</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Responsive Buttons -->
+    <link href="css/responsive_buttons.css" rel="stylesheet">
+    
+    <!-- Custom Styles -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+            min-height: 100vh;
+        }
+        
+        .glass-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .platform-card {
+            transition: all 0.3s ease;
+        }
+        
+        .platform-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+        .connected {
+            border-color: #10b981 !important;
+            background: rgba(16, 185, 129, 0.1) !important;
+        }
+        
+        .not-connected {
+            border-color: rgba(255, 255, 255, 0.2) !important;
+        }
+        
+        .publish-button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            transition: all 0.3s ease;
+        }
+        
+        .publish-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .loading-spinner {
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top: 2px solid white;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .progress-bar {
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            transition: width 0.3s ease;
+        }
+        
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            animation: slideIn 0.3s ease;
+        }
+        
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        
+        .platform-icon {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+        
+        .youtube-icon { color: #FF0000; }
+        .instagram-icon { 
+            background: linear-gradient(45deg, #f09433 0%,#e6683c 25%,#dc2743 50%,#cc2366 75%,#bc1888 100%); 
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .facebook-icon { color: #1877f2; }
+    </style>
+</head>
+<body class="text-white">
+    <!-- Navigation -->
+    <nav class="glass-card rounded-none border-0 border-b">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <!-- Logo -->
+                <div class="flex items-center space-x-3">
+                    <button onclick="goHome()" class="text-2xl hover:scale-110 transition-transform" title="Go Home">
+                        🏠
+                    </button>
+                    <div class="text-2xl">🎬</div>
+                    <h1 class="text-xl font-bold bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">
+                        Bamania's Cine AI
+                    </h1>
+                </div>
+                
+                <!-- Navigation Links -->
+                <div class="hidden md:flex items-center space-x-6">
+                    <a href="dashboard_pro.html" class="text-gray-300 hover:text-white transition-colors">
+                        <i class="fas fa-tachometer-alt mr-2"></i>Dashboard
+                    </a>
+                    <a href="progress_tracker.html" class="text-gray-300 hover:text-white transition-colors">
+                        <i class="fas fa-spinner mr-2"></i>Progress
+                    </a>
+                    <a href="social_dashboard.html" class="text-white font-semibold">
+                        <i class="fas fa-share-alt mr-2"></i>Social Media
+                    </a>
+                </div>
+                
+                <!-- Mobile Menu Button -->
+                <button class="md:hidden" onclick="toggleMobileMenu()">
+                    <i class="fas fa-bars text-xl"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Mobile Menu -->
+    <div id="mobileMenu" class="hidden md:hidden glass-card border-0 border-b">
+        <div class="px-4 py-3 space-y-2">
+            <a href="dashboard_pro.html" class="block text-gray-300 hover:text-white py-2">
+                <i class="fas fa-tachometer-alt mr-2"></i>Dashboard
+            </a>
+            <a href="progress_tracker.html" class="block text-gray-300 hover:text-white py-2">
+                <i class="fas fa-spinner mr-2"></i>Progress
+            </a>
+            <a href="social_dashboard.html" class="block text-white font-semibold py-2">
+                <i class="fas fa-share-alt mr-2"></i>Social Media
+            </a>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Header -->
+        <div class="mb-8">
+            <h2 class="text-3xl font-bold text-white mb-2">
+                <i class="fas fa-share-alt mr-3"></i>Social Media Manager
+            </h2>
+            <p class="text-gray-300">
+                Connect your accounts and publish videos automatically to YouTube Shorts, Instagram Reels, and Facebook
+            </p>
+        </div>
+
+        <!-- Platform Connection Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <!-- YouTube -->
+            <div id="youtubeCard" class="platform-card glass-card rounded-xl p-6 not-connected">
+                <div class="text-center">
+                    <i class="fab fa-youtube youtube-icon platform-icon"></i>
+                    <h3 class="text-xl font-semibold mb-2">YouTube Shorts</h3>
+                    <p class="text-gray-300 text-sm mb-4">
+                        Publish vertical videos as YouTube Shorts
+                    </p>
+                    <div id="youtubeStatus" class="mb-4">
+                        <span class="text-gray-400">
+                            <i class="fas fa-times-circle mr-1"></i>Not Connected
+                        </span>
+                    </div>
+                    <button id="youtubeConnectBtn" onclick="connectPlatform('youtube')" 
+                            class="w-full bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-4 rounded-lg transition-colors">
+                        <i class="fas fa-plug mr-2"></i>Connect Account
+                    </button>
+                    <button id="youtubeDisconnectBtn" onclick="disconnectPlatform('youtube')" 
+                            class="hidden w-full bg-gray-600 hover:bg-gray-700 text-white font-medium py-2 px-4 rounded-lg transition-colors">
+                        <i class="fas fa-unlink mr-2"></i>Disconnect
+                    </button>
+                </div>
+            </div>
+
+            <!-- Instagram -->
+            <div id="instagramCard" class="platform-card glass-card rounded-xl p-6 not-connected">
+                <div class="text-center">
+                    <i class="fab fa-instagram instagram-icon platform-icon"></i>
+                    <h3 class="text-xl font-semibold mb-2">Instagram Reels</h3>
+                    <p class="text-gray-300 text-sm mb-4">
+                        Share videos as Instagram Reels
+                    </p>
+                    <div id="instagramStatus" class="mb-4">
+                        <span class="text-gray-400">
+                            <i class="fas fa-times-circle mr-1"></i>Not Connected
+                        </span>
+                    </div>
+                    <button id="instagramConnectBtn" onclick="connectPlatform('instagram')" 
+                            class="w-full bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white font-medium py-2 px-4 rounded-lg transition-all">
+                        <i class="fas fa-plug mr-2"></i>Connect Account
+                    </button>
+                    <button id="instagramDisconnectBtn" onclick="disconnectPlatform('instagram')" 
+                            class="hidden w-full bg-gray-600 hover:bg-gray-700 text-white font-medium py-2 px-4 rounded-lg transition-colors">
+                        <i class="fas fa-unlink mr-2"></i>Disconnect
+                    </button>
+                </div>
+            </div>
+
+            <!-- Facebook -->
+            <div id="facebookCard" class="platform-card glass-card rounded-xl p-6 not-connected">
+                <div class="text-center">
+                    <i class="fab fa-facebook facebook-icon platform-icon"></i>
+                    <h3 class="text-xl font-semibold mb-2">Facebook</h3>
+                    <p class="text-gray-300 text-sm mb-4">
+                        Post videos to your Facebook Page
+                    </p>
+                    <div id="facebookStatus" class="mb-4">
+                        <span class="text-gray-400">
+                            <i class="fas fa-times-circle mr-1"></i>Not Connected
+                        </span>
+                    </div>
+                    <button id="facebookConnectBtn" onclick="connectPlatform('facebook')" 
+                            class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition-colors">
+                        <i class="fas fa-plug mr-2"></i>Connect Account
+                    </button>
+                    <button id="facebookDisconnectBtn" onclick="disconnectPlatform('facebook')" 
+                            class="hidden w-full bg-gray-600 hover:bg-gray-700 text-white font-medium py-2 px-4 rounded-lg transition-colors">
+                        <i class="fas fa-unlink mr-2"></i>Disconnect
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Publish Section -->
+        <div class="glass-card rounded-xl p-6 mb-8">
+            <h3 class="text-xl font-semibold mb-4">
+                <i class="fas fa-rocket mr-2"></i>Quick Publish
+            </h3>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Video Selection -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-300 mb-2">
+                        Select Video
+                    </label>
+                    <select id="videoSelect" class="w-full bg-gray-800 border border-gray-600 rounded-lg px-3 py-2 text-white">
+                        <option value="">Choose a video...</option>
+                    </select>
+                </div>
+
+                <!-- Platforms Selection -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-300 mb-2">
+                        Publish To
+                    </label>
+                    <div class="flex flex-wrap gap-3">
+                        <label class="flex items-center">
+                            <input type="checkbox" id="publishYouTube" class="mr-2">
+                            <i class="fab fa-youtube youtube-icon text-lg"></i>
+                        </label>
+                        <label class="flex items-center">
+                            <input type="checkbox" id="publishInstagram" class="mr-2">
+                            <i class="fab fa-instagram instagram-icon text-lg"></i>
+                        </label>
+                        <label class="flex items-center">
+                            <input type="checkbox" id="publishFacebook" class="mr-2">
+                            <i class="fab fa-facebook facebook-icon text-lg"></i>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Caption -->
+                <div class="md:col-span-2">
+                    <label class="block text-sm font-medium text-gray-300 mb-2">
+                        Caption
+                    </label>
+                    <textarea id="publishCaption" rows="3" 
+                              class="w-full bg-gray-800 border border-gray-600 rounded-lg px-3 py-2 text-white"
+                              placeholder="Enter your caption..."></textarea>
+                </div>
+
+                <!-- Hashtags -->
+                <div class="md:col-span-2">
+                    <label class="block text-sm font-medium text-gray-300 mb-2">
+                        Hashtags (comma-separated)
+                    </label>
+                    <input type="text" id="publishHashtags" 
+                           class="w-full bg-gray-800 border border-gray-600 rounded-lg px-3 py-2 text-white"
+                           placeholder="#shorts, #viral, #trending">
+                </div>
+            </div>
+
+            <!-- Publish Button -->
+            <div class="mt-6 flex justify-between items-center">
+                <div class="flex items-center space-x-4">
+                    <label class="flex items-center">
+                        <input type="checkbox" id="schedulePublish" class="mr-2">
+                        <span class="text-sm text-gray-300">Schedule for later</span>
+                    </label>
+                    <input type="datetime-local" id="scheduleDateTime" 
+                           class="hidden bg-gray-800 border border-gray-600 rounded-lg px-3 py-2 text-white">
+                </div>
+                
+                <button onclick="publishVideo()" id="publishBtn"
+                        class="publish-button text-white font-semibold py-3 px-6 rounded-lg">
+                    <i class="fas fa-paper-plane mr-2"></i>Publish Now
+                </button>
+            </div>
+        </div>
+
+        <!-- Publishing Queue -->
+        <div class="glass-card rounded-xl p-6">
+            <h3 class="text-xl font-semibold mb-4">
+                <i class="fas fa-clock mr-2"></i>Publishing Queue
+            </h3>
+            
+            <div id="publishingQueue" class="space-y-4">
+                <div class="text-center text-gray-400 py-8">
+                    <i class="fas fa-inbox text-4xl mb-4"></i>
+                    <p>No videos in publishing queue</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Publishing History -->
+        <div class="glass-card rounded-xl p-6 mt-8">
+            <h3 class="text-xl font-semibold mb-4">
+                <i class="fas fa-history mr-2"></i>Publishing History
+            </h3>
+            
+            <div id="publishingHistory" class="space-y-4">
+                <div class="text-center text-gray-400 py-8">
+                    <i class="fas fa-history text-4xl mb-4"></i>
+                    <p>No publishing history yet</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification -->
+    <div id="notification" class="notification hidden">
+        <div class="glass-card rounded-lg p-4 text-white">
+            <div class="flex items-center">
+                <i id="notificationIcon" class="fas fa-info-circle mr-2"></i>
+                <span id="notificationText"></span>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        // API Configuration
+        const API_BASE = window.location.hostname.includes('vercel')
+            ? 'https://bamanias-cine-ai.vercel.app/api/v1'
+            : 'http://localhost:8000/api/v1';
+        
+        const API_KEY = localStorage.getItem('apiKey') || 'sk-admin-key-12345';
+        
+        // State
+        let connectedAccounts = {};
+        let availableVideos = [];
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            loadConnectedAccounts();
+            loadAvailableVideos();
+            loadPublishingQueue();
+            loadPublishingHistory();
+            
+            // Auto-update every 30 seconds
+            setInterval(loadPublishingQueue, 30000);
+        });
+        
+        // Navigation functions
+        function goHome() {
+            window.location.href = 'dashboard_pro.html';
+        }
+        
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobileMenu');
+            menu.classList.toggle('hidden');
+        }
+        
+        // Platform connection
+        async function connectPlatform(platform) {
+            try {
+                showNotification(`Connecting to ${platform}...`, 'info');
+                
+                const response = await fetch(`${API_BASE}/social/connect/${platform}`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${API_KEY}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                const data = await response.json();
+                
+                if (data.auth_url) {
+                    // Redirect to OAuth URL
+                    window.location.href = data.auth_url;
+                } else {
+                    showNotification(`Failed to connect ${platform}`, 'error');
+                }
+                
+            } catch (error) {
+                showNotification(`Error connecting ${platform}: ${error.message}`, 'error');
+            }
+        }
+        
+        async function disconnectPlatform(platform) {
+            if (!confirm(`Are you sure you want to disconnect ${platform}?`)) {
+                return;
+            }
+            
+            try {
+                const accountId = connectedAccounts[platform]?.id;
+                if (!accountId) {
+                    showNotification('No connected account found', 'error');
+                    return;
+                }
+                
+                const response = await fetch(`${API_BASE}/social/accounts/${accountId}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': `Bearer ${API_KEY}`
+                    }
+                });
+                
+                if (response.ok) {
+                    showNotification(`${platform} disconnected successfully`, 'success');
+                    loadConnectedAccounts();
+                } else {
+                    showNotification(`Failed to disconnect ${platform}`, 'error');
+                }
+                
+            } catch (error) {
+                showNotification(`Error disconnecting ${platform}: ${error.message}`, 'error');
+            }
+        }
+        
+        // Load data
+        async function loadConnectedAccounts() {
+            try {
+                const response = await fetch(`${API_BASE}/social/accounts`, {
+                    headers: {
+                        'Authorization': `Bearer ${API_KEY}`
+                    }
+                });
+                
+                const data = await response.json();
+                
+                if (data.accounts) {
+                    connectedAccounts = {};
+                    data.accounts.forEach(account => {
+                        connectedAccounts[account.platform] = account;
+                        updatePlatformCard(account.platform, true, account);
+                    });
+                    
+                    // Update remaining platforms as not connected
+                    ['youtube', 'instagram', 'facebook'].forEach(platform => {
+                        if (!connectedAccounts[platform]) {
+                            updatePlatformCard(platform, false, null);
+                        }
+                    });
+                }
+                
+            } catch (error) {
+                console.error('Error loading accounts:', error);
+            }
+        }
+        
+        async function loadAvailableVideos() {
+            try {
+                const response = await fetch(`${API_BASE}/content/library`, {
+                    headers: {
+                        'Authorization': `Bearer ${API_KEY}`
+                    }
+                });
+                
+                const data = await response.json();
+                
+                if (data.videos) {
+                    availableVideos = data.videos;
+                    const select = document.getElementById('videoSelect');
+                    select.innerHTML = '<option value="">Choose a video...</option>';
+                    
+                    data.videos.forEach(video => {
+                        const option = document.createElement('option');
+                        option.value = video.id;
+                        option.textContent = `${video.title} (${video.duration}s)`;
+                        select.appendChild(option);
+                    });
+                }
+                
+            } catch (error) {
+                console.error('Error loading videos:', error);
+            }
+        }
+        
+        async function loadPublishingQueue() {
+            try {
+                const response = await fetch(`${API_BASE}/social/queue`, {
+                    headers: {
+                        'Authorization': `Bearer ${API_KEY}`
+                    }
+                });
+                
+                const data = await response.json();
+                
+                const container = document.getElementById('publishingQueue');
+                
+                if (data.queue && data.queue.length > 0) {
+                    container.innerHTML = data.queue.map(item => `
+                        <div class="glass-card rounded-lg p-4">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <h4 class="font-semibold text-white">${item.video_title}</h4>
+                                    <p class="text-sm text-gray-300">
+                                        ${item.platforms.join(', ').toUpperCase()}
+                                    </p>
+                                    <p class="text-xs text-gray-400">
+                                        Status: ${item.status} | ${new Date(item.created_at).toLocaleString()}
+                                    </p>
+                                </div>
+                                <div class="flex items-center space-x-2">
+                                    ${item.status === 'publishing' ? '<div class="loading-spinner"></div>' : ''}
+                                    <span class="text-sm ${getStatusColor(item.status)}">${item.status}</span>
+                                </div>
+                            </div>
+                            ${item.progress ? `
+                                <div class="progress-bar mt-3">
+                                    <div class="progress-fill" style="width: ${item.progress}%"></div>
+                                </div>
+                            ` : ''}
+                        </div>
+                    `).join('');
+                } else {
+                    container.innerHTML = `
+                        <div class="text-center text-gray-400 py-8">
+                            <i class="fas fa-inbox text-4xl mb-4"></i>
+                            <p>No videos in publishing queue</p>
+                        </div>
+                    `;
+                }
+                
+            } catch (error) {
+                console.error('Error loading queue:', error);
+            }
+        }
+        
+        async function loadPublishingHistory() {
+            try {
+                const response = await fetch(`${API_BASE}/social/history?limit=10`, {
+                    headers: {
+                        'Authorization': `Bearer ${API_KEY}`
+                    }
+                });
+                
+                const data = await response.json();
+                
+                const container = document.getElementById('publishingHistory');
+                
+                if (data.history && data.history.length > 0) {
+                    container.innerHTML = data.history.map(item => `
+                        <div class="glass-card rounded-lg p-4">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <h4 class="font-semibold text-white">${item.video_title}</h4>
+                                    <p class="text-sm text-gray-300">
+                                        ${item.platforms.join(', ').toUpperCase()}
+                                    </p>
+                                    <p class="text-xs text-gray-400">
+                                        Published: ${new Date(item.published_at).toLocaleString()}
+                                    </p>
+                                </div>
+                                <div class="text-right">
+                                    <div class="text-sm text-gray-300">
+                                        <i class="fas fa-eye mr-1"></i>${item.views || 0} views
+                                    </div>
+                                    <div class="text-sm text-gray-300">
+                                        <i class="fas fa-heart mr-1"></i>${item.likes || 0} likes
+                                    </div>
+                                </div>
+                            </div>
+                            ${item.error ? `
+                                <div class="mt-2 text-xs text-red-400">
+                                    <i class="fas fa-exclamation-circle mr-1"></i>${item.error}
+                                </div>
+                            ` : ''}
+                        </div>
+                    `).join('');
+                } else {
+                    container.innerHTML = `
+                        <div class="text-center text-gray-400 py-8">
+                            <i class="fas fa-history text-4xl mb-4"></i>
+                            <p>No publishing history yet</p>
+                        </div>
+                    `;
+                }
+                
+            } catch (error) {
+                console.error('Error loading history:', error);
+            }
+        }
+        
+        // Publishing
+        async function publishVideo() {
+            const videoId = document.getElementById('videoSelect').value;
+            const caption = document.getElementById('publishCaption').value;
+            const hashtags = document.getElementById('publishHashtags').value;
+            const isScheduled = document.getElementById('schedulePublish').checked;
+            const scheduleTime = document.getElementById('scheduleDateTime').value;
+            
+            // Get selected platforms
+            const platforms = [];
+            if (document.getElementById('publishYouTube').checked) platforms.push('youtube');
+            if (document.getElementById('publishInstagram').checked) platforms.push('instagram');
+            if (document.getElementById('publishFacebook').checked) platforms.push('facebook');
+            
+            // Validation
+            if (!videoId) {
+                showNotification('Please select a video', 'error');
+                return;
+            }
+            
+            if (platforms.length === 0) {
+                showNotification('Please select at least one platform', 'error');
+                return;
+            }
+            
+            if (isScheduled && !scheduleTime) {
+                showNotification('Please select a schedule time', 'error');
+                return;
+            }
+            
+            try {
+                const publishBtn = document.getElementById('publishBtn');
+                publishBtn.disabled = true;
+                publishBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Publishing...';
+                
+                const response = await fetch(`${API_BASE}/social/publish`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${API_KEY}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        video_id: videoId,
+                        platforms: platforms,
+                        caption: caption,
+                        hashtags: hashtags ? hashtags.split(',').map(h => h.trim()) : [],
+                        scheduled_for: isScheduled ? new Date(scheduleTime).toISOString() : null
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    showNotification(
+                        isScheduled ? 'Video scheduled successfully!' : 'Video publishing started!',
+                        'success'
+                    );
+                    
+                    // Reset form
+                    document.getElementById('videoSelect').value = '';
+                    document.getElementById('publishCaption').value = '';
+                    document.getElementById('publishHashtags').value = '';
+                    document.getElementById('publishYouTube').checked = false;
+                    document.getElementById('publishInstagram').checked = false;
+                    document.getElementById('publishFacebook').checked = false;
+                    
+                    // Reload queue
+                    loadPublishingQueue();
+                    
+                } else {
+                    showNotification(`Publishing failed: ${data.detail || 'Unknown error'}`, 'error');
+                }
+                
+            } catch (error) {
+                showNotification(`Publishing error: ${error.message}`, 'error');
+            } finally {
+                const publishBtn = document.getElementById('publishBtn');
+                publishBtn.disabled = false;
+                publishBtn.innerHTML = '<i class="fas fa-paper-plane mr-2"></i>Publish Now';
+            }
+        }
+        
+        // UI Helpers
+        function updatePlatformCard(platform, isConnected, account) {
+            const card = document.getElementById(`${platform}Card`);
+            const status = document.getElementById(`${platform}Status`);
+            const connectBtn = document.getElementById(`${platform}ConnectBtn`);
+            const disconnectBtn = document.getElementById(`${platform}DisconnectBtn`);
+            
+            if (isConnected) {
+                card.classList.remove('not-connected');
+                card.classList.add('connected');
+                
+                status.innerHTML = `
+                    <div class="flex items-center justify-center space-x-2">
+                        <img src="${account.profile_picture_url || '/api/placeholder/40/40'}" 
+                             class="w-8 h-8 rounded-full">
+                        <div>
+                            <div class="font-semibold text-white">${account.account_name}</div>
+                            <div class="text-xs text-gray-300">
+                                ${account.follower_count || 0} followers
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                connectBtn.classList.add('hidden');
+                disconnectBtn.classList.remove('hidden');
+            } else {
+                card.classList.remove('connected');
+                card.classList.add('not-connected');
+                
+                status.innerHTML = `
+                    <span class="text-gray-400">
+                        <i class="fas fa-times-circle mr-1"></i>Not Connected
+                    </span>
+                `;
+                
+                connectBtn.classList.remove('hidden');
+                disconnectBtn.classList.add('hidden');
+            }
+        }
+        
+        function getStatusColor(status) {
+            switch (status) {
+                case 'published': return 'text-green-400';
+                case 'publishing': return 'text-blue-400';
+                case 'scheduled': return 'text-yellow-400';
+                case 'failed': return 'text-red-400';
+                default: return 'text-gray-400';
+            }
+        }
+        
+        function showNotification(message, type = 'info') {
+            const notification = document.getElementById('notification');
+            const icon = document.getElementById('notificationIcon');
+            const text = document.getElementById('notificationText');
+            
+            // Set icon based on type
+            const icons = {
+                info: 'fa-info-circle',
+                success: 'fa-check-circle',
+                error: 'fa-exclamation-circle',
+                warning: 'fa-exclamation-triangle'
+            };
+            
+            icon.className = `fas ${icons[type]} mr-2`;
+            text.textContent = message;
+            
+            // Show notification
+            notification.classList.remove('hidden');
+            
+            // Auto-hide after 5 seconds
+            setTimeout(() => {
+                notification.classList.add('hidden');
+            }, 5000);
+        }
+        
+        // Schedule toggle
+        document.getElementById('schedulePublish').addEventListener('change', function() {
+            const scheduleInput = document.getElementById('scheduleDateTime');
+            if (this.checked) {
+                scheduleInput.classList.remove('hidden');
+                // Set minimum to now
+                const now = new Date();
+                now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+                scheduleInput.min = now.toISOString().slice(0, 16);
+            } else {
+                scheduleInput.classList.add('hidden');
+            }
+        });
+    </script>
+</body>
+</html>

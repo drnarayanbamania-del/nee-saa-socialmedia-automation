@@ -1,0 +1,115 @@
+version: '3.8'
+
+services:
+  # Redis for job queue
+  redis:
+    image: redis:7-alpine
+    container_name: hindi-ai-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # PostgreSQL Database
+  postgres:
+    image: postgres:15-alpine
+    container_name: hindi-ai-postgres
+    environment:
+      POSTGRES_DB: hindi_ai_factory
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-secure_password_123}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./database/schema.sql:/docker-entrypoint-initdb.d/schema.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U admin -d hindi_ai_factory"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Backend API and AI Engine
+  backend:
+    build: .
+    container_name: hindi-ai-backend
+    ports:
+      - "8000:8000"
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - REDIS_URL=redis://redis:6379
+      - DATABASE_URL=postgresql://admin:${DB_PASSWORD:-secure_password_123}@postgres:5432/hindi_ai_factory
+      - PYTHONPATH=/app
+    volumes:
+      - ./outputs:/app/outputs
+      - ./generated_images:/app/generated_images
+      - ./temp_audio:/app/temp_audio
+      - ./final_videos:/app/final_videos
+      - ./thumbnails:/app/thumbnails
+    depends_on:
+      redis:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Worker for processing background jobs
+  worker:
+    build: .
+    container_name: hindi-ai-worker
+    command: ["python", "-c", "
+      from automation.workflow_engine import WorkflowEngine;
+      from rq import Worker, Queue, Connection;
+      import redis;
+      conn = redis.from_url('redis://redis:6379');
+      worker = Worker([Queue(connection=conn)], connection=conn);
+      worker.work()
+    "]
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - REDIS_URL=redis://redis:6379
+      - PYTHONPATH=/app
+    volumes:
+      - ./outputs:/app/outputs
+      - ./generated_images:/app/generated_images
+      - ./temp_audio:/app/temp_audio
+      - ./final_videos:/app/final_videos
+      - ./thumbnails:/app/thumbnails
+    depends_on:
+      - redis
+      - postgres
+    restart: unless-stopped
+    deploy:
+      replicas: 2  # Scale workers as needed
+
+  # Nginx for serving frontend and reverse proxy
+  nginx:
+    image: nginx:alpine
+    container_name: hindi-ai-nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./frontend:/usr/share/nginx/html
+      - ./nginx.conf:/etc/nginx/nginx.conf
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+volumes:
+  redis_data:
+  postgres_data:
+
+networks:
+  default:
+    name: hindi-ai-network
