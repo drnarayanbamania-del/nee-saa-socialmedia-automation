@@ -1,0 +1,131 @@
+# Cinematic AI Factory - Dockerfile
+# Multi-stage build for production optimization
+
+# ============================================
+# Stage 1: Base Python Image
+# ============================================
+FROM python:3.11-slim as base
+
+# Set environment variables
+ENV PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1 \
+    PIP_NO_CACHE_DIR=1 \
+    PIP_DISABLE_PIP_VERSION_CHECK=1
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    gcc \
+    g++ \
+    ffmpeg \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+# Set work directory
+WORKDIR /app
+
+# ============================================
+# Stage 2: Builder (for dependencies)
+# ============================================
+FROM base as builder
+
+# Copy requirements
+COPY requirements.txt .
+
+# Install Python dependencies
+RUN pip install --user --no-warn-script-location \
+    -r requirements.txt
+
+# Install additional cinematic dependencies
+RUN pip install --user --no-warn-script-location \
+    moviepy==1.0.3 \
+    pillow==10.0.0 \
+    numpy==1.24.3
+
+# ============================================
+# Stage 3: Production Image
+# ============================================
+FROM base as production
+
+# Create non-root user
+RUN groupadd -r cinematic && useradd -r -g cinematic cinematic
+
+# Copy installed packages from builder
+COPY --from=builder /root/.local /home/cinematic/.local
+
+# Copy application code
+COPY --chown=cinematic:cinematic . .
+
+# Create necessary directories
+RUN mkdir -p output/{scripts,images,voice,videos,thumbnails,metadata} \
+    && mkdir -p logs/{workflows,scrapes,generations} \
+    && mkdir -p assets/{music,fonts,temp} \
+    && mkdir -p workflows \
+    && mkdir -p temp \
+    && chown -R cinematic:cinematic /app
+
+# Switch to non-root user
+USER cinematic
+
+# Add user's local bin to PATH
+ENV PATH=/home/cinematic/.local/bin:$PATH
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
+    CMD curl -f http://localhost:8000/health || exit 1
+
+# Expose port
+EXPOSE 8000
+
+# Default command for API service
+CMD ["python", "backend/cinematic_api.py"]
+
+# ============================================
+# Stage 4: Worker Image
+# ============================================
+FROM production as worker
+
+# Override command for worker service
+CMD ["python", "-m", "automation.worker"]
+
+# ============================================
+# Stage 5: Development Image
+# ============================================
+FROM base as development
+
+# Install development dependencies
+RUN pip install --no-cache-dir \
+    pytest \
+    pytest-cov \
+    black \
+    flake8 \
+    mypy \
+    ipython
+
+# Copy application code
+COPY . .
+
+# Install Python dependencies
+RUN pip install -r requirements.txt
+
+# Install cinematic dependencies
+RUN pip install moviepy==1.0.3 pillow==10.0.0 numpy==1.24.3
+
+# Create directories
+RUN mkdir -p output/{scripts,images,voice,videos,thumbnails,metadata} \
+    && mkdir -p logs/{workflows,scrapes,generations} \
+    && mkdir -p assets/{music,fonts,temp} \
+    && mkdir -p workflows \
+    && mkdir -p temp
+
+# Default command for development
+CMD ["uvicorn", "backend.cinematic_api:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+
+# ============================================
+# Labels for metadata
+# ============================================
+LABEL maintainer="Cinematic AI Factory Team"
+LABEL version="2.0.0"
+LABEL description="Professional AI Content Factory for Viral Hindi Videos"
+LABEL org.opencontainers.image.source="https://github.com/yourusername/cinematic-ai-factory"
+LABEL org.opencontainers.image.documentation="https://docs.cinematic-factory.com"
+LABEL org.opencontainers.image.licenses="MIT"

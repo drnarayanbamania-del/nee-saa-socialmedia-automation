@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hindi AI Automation Platform</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .gradient-bg { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .card-hover { transition: all 0.3s ease; }
+        .card-hover:hover { transform: translateY(-5px); box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1); }
+        .pulse-animation { animation: pulse 2s infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+        .loading-spinner { border: 3px solid #f3f3f3; border-top: 3px solid #667eea; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+
+        // API Configuration
+        const API_BASE_URL = 'http://localhost:8000/api/v1';
+        const API_KEY = 'sk-admin-key-12345';
+
+        // Main App Component
+        function App() {
+            const [activeTab, setActiveTab] = useState('dashboard');
+            const [loading, setLoading] = useState(false);
+            const [notification, setNotification] = useState(null);
+
+            const showNotification = (message, type = 'info') => {
+                setNotification({ message, type });
+                setTimeout(() => setNotification(null), 5000);
+            };
+
+            return (
+                <div className="min-h-screen gradient-bg">
+                    {/* Header */}
+                    <header className="bg-white/10 backdrop-blur-md border-b border-white/20">
+                        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                            <div className="flex justify-between items-center h-16">
+                                <div className="flex items-center space-x-3">
+                                    <i className="fas fa-robot text-3xl text-white"></i>
+                                    <div>
+                                        <h1 className="text-xl font-bold text-white">Hindi AI Factory</h1>
+                                        <p className="text-xs text-white/70">AI Content Automation Platform</p>
+                                        <p className="text-xs text-yellow-300 mt-1">🎬 Pro Version Available: <a href="dashboard_pro.html" className="underline">Click Here</a></p>
+                                    </div>
+                                </div>
+                                <div className="flex items-center space-x-4">
+                                    <span className="text-white/80 text-sm">API Connected</span>
+                                    <div className="w-2 h-2 bg-green-400 rounded-full pulse-animation"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </header>
+
+                    {/* Notification */}
+                    {notification && (
+                        <div className={`fixed top-20 right-4 z-50 p-4 rounded-lg shadow-lg max-w-sm ${
+                            notification.type === 'success' ? 'bg-green-500' : 
+                            notification.type === 'error' ? 'bg-red-500' : 'bg-blue-500'
+                        } text-white`}>
+                            <div className="flex items-center space-x-2">
+                                <i className={`fas fa-${
+                                    notification.type === 'success' ? 'check-circle' : 
+                                    notification.type === 'error' ? 'exclamation-circle' : 'info-circle'
+                                }`}></i>
+                                <span>{notification.message}</span>
+                            </div>
+                        </div>
+                    )}
+
+                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+                        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+                            {/* Sidebar */}
+                            <div className="lg:col-span-1">
+                                <div className="bg-white rounded-xl shadow-lg p-4">
+                                    <nav className="space-y-2">
+                                        <button
+                                            onClick={() => setActiveTab('dashboard')}
+                                            className={`w-full text-left px-4 py-3 rounded-lg transition-all ${
+                                                activeTab === 'dashboard' 
+                                                    ? 'bg-purple-100 text-purple-700 font-medium' 
+                                                    : 'hover:bg-gray-100 text-gray-700'
+                                            }`}
+                                        >
+                                            <i className="fas fa-tachometer-alt mr-3"></i>
+                                            Dashboard
+                                        </button>
+                                        <button
+                                            onClick={() => setActiveTab('trending')}
+                                            className={`w-full text-left px-4 py-3 rounded-lg transition-all ${
+                                                activeTab === 'trending' 
+                                                    ? 'bg-purple-100 text-purple-700 font-medium' 
+                                                    : 'hover:bg-gray-100 text-gray-700'
+                                            }`}
+                                        >
+                                            <i className="fas fa-fire mr-3"></i>
+                                            Trending Topics
+                                        </button>
+                                        <button
+                                            onClick={() => setActiveTab('script')}
+                                            className={`w-full text-left px-4 py-3 rounded-lg transition-all ${
+                                                activeTab === 'script' 
+                                                    ? 'bg-purple-100 text-purple-700 font-medium' 
+                                                    : 'hover:bg-gray-100 text-gray-700'
+                                            }`}
+                                        >
+                                            <i className="fas fa-file-alt mr-3"></i>
+                                            Script Generator
+                                        </button>
+                                        <button
+                                            onClick={() => setActiveTab('automation')}
+                                            className={`w-full text-left px-4 py-3 rounded-lg transition-all ${
+                                                activeTab === 'automation' 
+                                                    ? 'bg-purple-100 text-purple-700 font-medium' 
+                                                    : 'hover:bg-gray-100 text-gray-700'
+                                            }`}
+                                        >
+                                            <i className="fas fa-cogs mr-3"></i>
+                                            Automation
+                                        </button>
+                                        <button
+                                            onClick={() => setActiveTab('analytics')}
+                                            className={`w-full text-left px-4 py-3 rounded-lg transition-all ${
+                                                activeTab === 'analytics' 
+                                                    ? 'bg-purple-100 text-purple-700 font-medium' 
+                                                    : 'hover:bg-gray-100 text-gray-700'
+                                            }`}
+                                        >
+                                            <i className="fas fa-chart-bar mr-3"></i>
+                                            Analytics
+                                        </button>
+                                    </nav>
+                                </div>
+                            </div>
+
+                            {/* Main Content */}
+                            <div className="lg:col-span-3">
+                                {activeTab === 'dashboard' && <DashboardTab loading={loading} showNotification={showNotification} />}
+                                {activeTab === 'trending' && <TrendingTab loading={loading} setLoading={setLoading} showNotification={showNotification} />}
+                                {activeTab === 'script' && <ScriptTab loading={loading} setLoading={setLoading} showNotification={showNotification} />}
+                                {activeTab === 'automation' && <AutomationTab loading={loading} setLoading={setLoading} showNotification={showNotification} />}
+                                {activeTab === 'analytics' && <AnalyticsTab />}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        // Dashboard Tab
+        function DashboardTab({ loading, showNotification }) {
+            return (
+                <div className="space-y-6">
+                    <div className="bg-white rounded-xl shadow-lg p-6">
+                        <h2 className="text-2xl font-bold text-gray-800 mb-6">
+                            <i className="fas fa-tachometer-alt mr-2 text-purple-600"></i>
+                            Dashboard Overview
+                        </h2>
+                        
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                            <StatCard icon="video" title="Total Videos" value="24" color="blue" />
+                            <StatCard icon="check-circle" title="Published" value="18" color="green" />
+                            <StatCard icon="cogs" title="In Progress" value="3" color="yellow" />
+                            <StatCard icon="chart-line" title="Total Views" value="125K" color="purple" />
+                        </div>
+
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                            <div className="bg-gray-50 rounded-lg p-4">
+                                <h3 className="font-semibold text-gray-800 mb-4">Recent Activity</h3>
+                                <div className="space-y-3">
+                                    <ActivityItem icon="file-alt" text="New script generated" time="2 hours ago" />
+                                    <ActivityItem icon="video" text="Video published to YouTube" time="5 hours ago" />
+                                    <ActivityItem icon="fire" text="Trending topics scraped" time="1 day ago" />
+                                </div>
+                            </div>
+                            
+                            <div className="bg-gray-50 rounded-lg p-4">
+                                <h3 className="font-semibold text-gray-800 mb-4">Quick Actions</h3>
+                                <div className="space-y-3">
+                                    <button className="w-full bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition-colors">
+                                        <i className="fas fa-play mr-2"></i>
+                                        Run Full Automation
+                                    </button>
+                                    <button className="w-full bg-gray-200 text-gray-800 px-4 py-2 rounded-lg hover:bg-gray-300 transition-colors">
+                                        <i className="fas fa-file-alt mr-2"></i>
+                                        Generate Script Only
+                                    </button>
+                                    <button className="w-full bg-gray-200 text-gray-800 px-4 py-2 rounded-lg hover:bg-gray-300 transition-colors">
+                                        <i className="fas fa-chart-bar mr-2"></i>
+                                        View Analytics
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        // Stat Card Component
+        function StatCard({ icon, title, value, color }) {
+            const colorClasses = {
+                blue: 'bg-blue-500',
+                green: 'bg-green-500',
+                yellow: 'bg-yellow-500',
+                purple: 'bg-purple-500'
+            };
+
+            return (
+                <div className="bg-white rounded-lg shadow p-6 card-hover">
+                    <div className="flex items-center justify-between">
+                        <div>
+                            <p className="text-sm text-gray-600">{title}</p>
+                            <p className="text-2xl font-bold text-gray-800">{value}</p>
+                        </div>
+                        <div className={`w-10 h-10 ${colorClasses[color]} rounded-lg flex items-center justify-center text-white`}>
+                            <i className={`fas fa-${icon}`}></i>
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        // Activity Item Component
+        function ActivityItem({ icon, text, time }) {
+            return (
+                <div className="flex items-center space-x-3 text-sm">
+                    <i className={`fas fa-${icon} text-gray-400 w-4`}></i>
+                    <span className="text-gray-700">{text}</span>
+                    <span className="text-gray-500 ml-auto">{time}</span>
+                </div>
+            );
+        }
+
+        // Trending Tab
+        function TrendingTab({ loading, setLoading, showNotification }) {
+            const [topics, setTopics] = useState([]);
+            const [limit, setLimit] = useState(10);
+
+            const fetchTrendingTopics = async () => {
+                setLoading(true);
+                try {
+                    const response = await fetch(`${API_BASE_URL}/trending?limit=${limit}`, {
+                        headers: { 'Authorization': `Bearer ${API_KEY}` }
+                    });
+                    const data = await response.json();
+                    
+                    if (data.success) {
+                        setTopics(data.topics);
+                        showNotification(`Found ${data.count} trending topics`, 'success');
+                    } else {
+                        showNotification('Failed to fetch trending topics', 'error');
+                    }
+                } catch (error) {
+                    showNotification('Error connecting to API', 'error');
+                } finally {
+                    setLoading(false);
+                }
+            };
+
+            useEffect(() => {
+                fetchTrendingTopics();
+            }, []);
+
+            return (
+                <div className="bg-white rounded-xl shadow-lg p-6">
+                    <div className="flex justify-between items-center mb-6">
+                        <h2 className="text-2xl font-bold text-gray-800">
+                            <i className="fas fa-fire mr-2 text-orange-500"></i>
+                            Trending Topics
+                        </h2>
+                        <button
+                            onClick={fetchTrendingTopics}
+                            disabled={loading}
+                            className="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition-colors disabled:opacity-50"
+                        >
+                            <i className="fas fa-sync-alt mr-2"></i>
+                            Refresh
+                        </button>
+                    </div>
+
+                    {loading ? (
+                        <div className="flex justify-center py-8">
+                            <div className="loading-spinner"></div>
+                        </div>
+                    ) : (
+                        <div className="space-y-4">
+                            {topics.map((topic, index) => (
+                                <div key={index} className="border rounded-lg p-4 hover:shadow-md transition-shadow">
+                                    <div className="flex items-start justify-between">
+                                        <div className="flex-1">
+                                            <h3 className="font-semibold text-gray-800">
+                                                {topic.topic_hi} ({topic.topic_en})
+                                            </h3>
+                                            <div className="flex items-center space-x-4 mt-2 text-sm text-gray-600">
+                                                <span className="bg-purple-100 text-purple-700 px-2 py-1 rounded">
+                                                    {topic.category_hi}
+                                                </span>
+                                                <span>Source: {topic.source}</span>
+                                                <span>Score: {topic.trending_score.toFixed(1)}</span>
+                                            </div>
+                                        </div>
+                                        <button className="bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600 transition-colors">
+                                            <i className="fas fa-play mr-1"></i>
+                                            Use Topic
+                                        </button>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    )}
+                </div>
+            );
+        }
+
+        // Script Tab
+        function ScriptTab({ loading, setLoading, showNotification }) {
+            const [topic, setTopic] = useState('');
+            const [category, setCategory] = useState('general');
+            const [script, setScript] = useState(null);
+
+            const generateScript = async () => {
+                if (!topic.trim()) {
+                    showNotification('Please enter a topic', 'error');
+                    return;
+                }
+
+                setLoading(true);
+                try {
+                    const response = await fetch(`${API_BASE_URL}/generate-script`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${API_KEY}`
+                        },
+                        body: JSON.stringify({ topic, category })
+                    });
+                    
+                    const data = await response.json();
+                    
+                    if (data.success) {
+                        setScript(data.script);
+                        showNotification('Script generated successfully!', 'success');
+                    } else {
+                        showNotification(data.error || 'Failed to generate script', 'error');
+                    }
+                } catch (error) {
+                    showNotification('Error connecting to API', 'error');
+                } finally {
+                    setLoading(false);
+                }
+            };
+
+            return (
+                <div className="bg-white rounded-xl shadow-lg p-6">
+                    <h2 className="text-2xl font-bold text-gray-800 mb-6">
+                        <i className="fas fa-file-alt mr-2 text-purple-600"></i>
+                        Script Generator
+                    </h2>
+
+                    <div className="mb-6">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                            <input
+                                type="text"
+                                placeholder="Enter topic (Hindi)"
+                                value={topic}
+                                onChange={(e) => setTopic(e.target.value)}
+                                className="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                            />
+                            <select
+                                value={category}
+                                onChange={(e) => setCategory(e.target.value)}
+                                className="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                            >
+                                <option value="general">General</option>
+                                <option value="motivation">Motivation</option>
+                                <option value="education">Education</option>
+                                <option value="business">Business</option>
+                                <option value="technology">Technology</option>
+                                <option value="lifestyle">Lifestyle</option>
+                                <option value="entertainment">Entertainment</option>
+                            </select>
+                        </div>
+                        <button
+                            onClick={generateScript}
+                            disabled={loading}
+                            className="bg-purple-600 text-white px-6 py-2 rounded-lg hover:bg-purple-700 transition-colors disabled:opacity-50"
+                        >
+                            <i className="fas fa-magic mr-2"></i>
+                            Generate Script
+                        </button>
+                    </div>
+
+                    {loading && (
+                        <div className="flex justify-center py-8">
+                            <div className="loading-spinner"></div>
+                        </div>
+                    )}
+
+                    {script && !loading && (
+                        <div className="space-y-4">
+                            <div className="bg-gray-50 rounded-lg p-4">
+                                <h3 className="font-bold text-lg text-gray-800 mb-2">
+                                    {script.title_hi}
+                                </h3>
+                                <p className="text-gray-600 mb-4">{script.description_hi}</p>
+                                <div className="grid grid-cols-3 gap-4 text-sm">
+                                    <div>
+                                        <span className="font-semibold">Duration:</span> {script.total_duration}s
+                                    </div>
+                                    <div>
+                                        <span className="font-semibold">Scenes:</span> {script.segments.length}
+                                    </div>
+                                    <div>
+                                        <span className="font-semibold">Category:</span> {script.category}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="space-y-3">
+                                <h4 className="font-semibold text-gray-800">Script Scenes:</h4>
+                                {script.segments.map((segment, index) => (
+                                    <div key={index} className="border rounded-lg p-3">
+                                        <div className="flex justify-between items-start">
+                                            <div className="flex-1">
+                                                <span className="bg-purple-100 text-purple-700 text-xs px-2 py-1 rounded mr-2">
+                                                    Scene {segment.scene_number}
+                                                </span>
+                                                <span className="text-gray-500 text-xs">
+                                                    {segment.duration_seconds}s
+                                                </span>
+                                                <p className="mt-2 font-medium text-gray-800">
+                                                    {segment.hindi_text}
+                                                </p>
+                                                <p className="text-sm text-gray-600 mt-1">
+                                                    <em>{segment.english_translation}</em>
+                                                </p>
+                                                <p className="text-sm text-gray-500 mt-1">
+                                                    Visual: {segment.scene_description}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    )}
+                </div>
+            );
+        }
+
+        // Automation Tab
+        function AutomationTab({ loading, setLoading, showNotification }) {
+            const [workflowType, setWorkflowType] = useState('full_automation');
+            const [topic, setTopic] = useState('');
+            const [jobId, setJobId] = useState(null);
+            const [jobStatus, setJobStatus] = useState(null);
+
+            const createAutomationJob = async () => {
+                setLoading(true);
+                try {
+                    const response = await fetch(`${API_BASE_URL}/jobs`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${API_KEY}`
+                        },
+                        body: JSON.stringify({
+                            workflow_type: workflowType,
+                            parameters: {
+                                topic: topic || undefined,
+                                openai_api_key: 'sk-test-key',
+                                platform: 'youtube_shorts',
+                                image_style: 'cinematic',
+                                voice_type: 'female_neutral'
+                            }
+                        })
+                    });
+                    
+                    const data = await response.json();
+                    
+                    if (data.success) {
+                        setJobId(data.job_id);
+                        showNotification(`Automation job created: ${data.job_id}`, 'success');
+                        checkJobStatus(data.job_id);
+                    } else {
+                        showNotification(data.error || 'Failed to create job', 'error');
+                    }
+                } catch (error) {
+                    showNotification('Error connecting to API', 'error');
+                } finally {
+                    setLoading(false);
+                }
+            };
+
+            const checkJobStatus = async (jobId) => {
+                try {
+                    const response = await fetch(`${API_BASE_URL}/jobs/${jobId}`, {
+                        headers: { 'Authorization': `Bearer ${API_KEY}` }
+                    });
+                    const data = await response.json();
+                    
+                    if (data.success) {
+                        setJobStatus(data);
+                        
+                        if (data.status === 'running' || data.status === 'pending') {
+                            setTimeout(() => checkJobStatus(jobId), 5000);
+                        } else if (data.status === 'completed') {
+                            showNotification('Automation completed successfully!', 'success');
+                        }
+                    }
+                } catch (error) {
+                    console.error('Error checking job status:', error);
+                }
+            };
+
+            return (
+                <div className="bg-white rounded-xl shadow-lg p-6">
+                    <h2 className="text-2xl font-bold text-gray-800 mb-6">
+                        <i className="fas fa-cogs mr-2 text-purple-600"></i>
+                        Automation Engine
+                    </h2>
+
+                    <div className="mb-6">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                            <select
+                                value={workflowType}
+                                onChange={(e) => setWorkflowType(e.target.value)}
+                                className="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                            >
+                                <option value="full_automation">Full Automation (Trending → Video)</option>
+                                <option value="video_only">Video Only (Script → Video)</option>
+                                <option value="trending_to_script">Trending → Script Only</option>
+                            </select>
+                            <input
+                                type="text"
+                                placeholder="Topic (optional, leave empty for trending)"
+                                value={topic}
+                                onChange={(e) => setTopic(e.target.value)}
+                                className="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                            />
+                        </div>
+                        <button
+                            onClick={createAutomationJob}
+                            disabled={loading}
+                            className="bg-purple-600 text-white px-6 py-2 rounded-lg hover:bg-purple-700 transition-colors disabled:opacity-50"
+                        >
+                            <i className="fas fa-play mr-2"></i>
+                            Start Automation
+                        </button>
+                    </div>
+
+                    {loading && (
+                        <div className="flex justify-center py-8">
+                            <div className="loading-spinner"></div>
+                        </div>
+                    )}
+
+                    {jobStatus && (
+                        <div className="space-y-4">
+                            <div className="bg-gray-50 rounded-lg p-4">
+                                <h3 className="font-semibold text-gray-800 mb-2">Job Status</h3>
+                                <div className="space-y-2 text-sm">
+                                    <div className="flex justify-between">
+                                        <span>Job ID:</span>
+                                        <span className="font-mono">{jobStatus.job_id}</span>
+                                    </div>
+                                    <div className="flex justify-between">
+                                        <span>Status:</span>
+                                        <span className={`font-semibold ${
+                                            jobStatus.status === 'completed' ? 'text-green-600' :
+                                            jobStatus.status === 'failed' ? 'text-red-600' :
+                                            jobStatus.status === 'running' ? 'text-blue-600' :
+                                            'text-yellow-600'
+                                        }`}>
+                                            {jobStatus.status.toUpperCase()}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {jobStatus.result && (
+                                <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+                                    <h4 className="font-semibold text-green-800 mb-2">
+                                        <i className="fas fa-check-circle mr-2"></i>
+                                        Automation Completed!
+                                    </h4>
+                                    <div className="text-sm text-green-700 space-y-1">
+                                        <p>✅ Video: {jobStatus.result.video_path}</p>
+                                        <p>✅ Script: {jobStatus.result.script?.title_hi}</p>
+                                        <p>✅ Hashtags: {jobStatus.result.captions?.hashtags?.length} generated</p>
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+                    )}
+                </div>
+            );
+        }
+
+        // Analytics Tab
+        function AnalyticsTab() {
+            return (
+                <div className="bg-white rounded-xl shadow-lg p-6">
+                    <h2 className="text-2xl font-bold text-gray-800 mb-6">
+                        <i className="fas fa-chart-bar mr-2 text-purple-600"></i>
+                        Analytics Dashboard
+                    </h2>
+                    
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                        <StatCard icon="eye" title="Total Views" value="125,432" color="blue" />
+                        <StatCard icon="heart" title="Total Likes" value="8,567" color="red" />
+                        <StatCard icon="comment" title="Comments" value="1,234" color="green" />
+                        <StatCard icon="share" title="Shares" value="567" color="purple" />
+                    </div>
+
+                    <div className="bg-gray-50 rounded-lg p-6">
+                        <h3 className="font-semibold text-gray-800 mb-4">Content Performance</h3>
+                        <div className="space-y-4">
+                            <div className="flex items-center justify-between p-3 bg-white rounded-lg">
+                                <div>
+                                    <p className="font-medium text-gray-800">सुबह की रूटीन</p>
+                                    <p className="text-sm text-gray-600">YouTube Shorts</p>
+                                </div>
+                                <div className="text-right">
+                                    <p className="font-semibold text-gray-800">45.2K views</p>
+                                    <p className="text-sm text-green-600">+12%</p>
+                                </div>
+                            </div>
+                            <div className="flex items-center justify-between p-3 bg-white rounded-lg">
+                                <div>
+                                    <p className="font-medium text-gray-800">सफलता के रहस्य</p>
+                                    <p className="text-sm text-gray-600">Instagram Reels</p>
+                                </div>
+                                <div className="text-right">
+                                    <p className="font-semibold text-gray-800">32.1K views</p>
+                                    <p className="text-sm text-green-600">+8%</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        // Render App
+        ReactDOM.render(<App />, document.getElementById('root'));
+    </script>
+</body>
+</html>

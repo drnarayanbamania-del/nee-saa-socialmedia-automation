@@ -1,0 +1,2397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Bamania's Cine AI — App Preview</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --purple:#7c3aed;--purple-light:#8b5cf6;--fuchsia:#a21caf;
+  --pink:#ec4899;--blue:#3b82f6;--green:#22c55e;--red:#ef4444;
+  --yellow:#f59e0b;--gray-50:#f9fafb;--gray-100:#f3f4f6;
+  --gray-200:#e5e7eb;--gray-300:#d1d5db;--gray-400:#9ca3af;
+  --gray-500:#6b7280;--gray-600:#4b5563;--gray-700:#374151;
+  --gray-800:#1f2937;--gray-900:#111827;
+}
+body{font-family:'Inter',sans-serif;background:#0f0f1a;color:#fff;overflow-x:hidden}
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar{width:4px;height:4px}
+::-webkit-scrollbar-track{background:rgba(255,255,255,.05)}
+::-webkit-scrollbar-thumb{background:var(--purple);border-radius:99px}
+
+/* ── LAYOUT ── */
+.app-shell{display:flex;height:100vh;overflow:hidden}
+
+/* ── SIDEBAR ── */
+.sidebar{
+  width:240px;min-width:240px;background:#13131f;
+  border-right:1px solid rgba(255,255,255,.07);
+  display:flex;flex-direction:column;overflow-y:auto;
+  transition:transform .3s;z-index:50
+}
+.sidebar-logo{
+  padding:20px 16px 16px;
+  border-bottom:1px solid rgba(255,255,255,.07)
+}
+.logo-row{display:flex;align-items:center;gap:10px}
+.logo-icon{
+  width:38px;height:38px;border-radius:10px;
+  background:linear-gradient(135deg,#7c3aed,#ec4899);
+  display:flex;align-items:center;justify-content:center;font-size:18px
+}
+.logo-text{font-size:15px;font-weight:800;line-height:1.2}
+.logo-text span{
+  background:linear-gradient(90deg,#a78bfa,#f472b6);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent
+}
+.logo-sub{font-size:10px;color:#6b7280;margin-top:2px}
+.workspace-card{
+  margin:12px;padding:12px;border-radius:10px;
+  background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07)
+}
+.workspace-label{font-size:9px;font-weight:700;color:#6b7280;letter-spacing:1px;margin-bottom:6px}
+.workspace-desc{font-size:11px;color:#9ca3af;line-height:1.5}
+.nav-label{
+  font-size:9px;font-weight:700;color:#6b7280;letter-spacing:1px;
+  padding:12px 16px 6px
+}
+.nav-item{
+  display:flex;align-items:center;gap:10px;padding:9px 14px;
+  margin:1px 8px;border-radius:8px;cursor:pointer;
+  font-size:13px;font-weight:500;color:#9ca3af;
+  transition:all .2s;position:relative
+}
+.nav-item:hover{background:rgba(255,255,255,.06);color:#fff}
+.nav-item.active{
+  background:linear-gradient(90deg,rgba(124,58,237,.3),rgba(236,72,153,.15));
+  color:#fff;border:1px solid rgba(124,58,237,.3)
+}
+.nav-item .badge{
+  margin-left:auto;font-size:9px;padding:2px 6px;border-radius:99px;
+  background:linear-gradient(90deg,#7c3aed,#ec4899);color:#fff;font-weight:700
+}
+.pro-plan-card{
+  margin:12px;padding:14px;border-radius:12px;
+  background:linear-gradient(135deg,#7c3aed,#a21caf);
+  margin-top:auto
+}
+.pro-plan-row{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.pro-plan-title{font-size:13px;font-weight:700}
+.pro-plan-sub{font-size:11px;opacity:.8;margin-bottom:8px}
+.progress-bar-wrap{background:rgba(0,0,0,.3);border-radius:99px;height:5px;margin-bottom:6px}
+.progress-bar-fill{height:5px;border-radius:99px;background:linear-gradient(90deg,#fbbf24,#f59e0b)}
+.pro-price{font-size:10px;opacity:.7;margin-bottom:10px}
+.upgrade-btn{
+  width:100%;padding:8px;border-radius:8px;border:none;
+  background:rgba(255,255,255,.2);color:#fff;font-size:12px;
+  font-weight:600;cursor:pointer;transition:all .2s
+}
+.upgrade-btn:hover{background:rgba(255,255,255,.3)}
+
+/* ── MAIN ── */
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden}
+
+/* ── HEADER ── */
+.header{
+  padding:0 20px;height:56px;display:flex;align-items:center;
+  justify-content:space-between;border-bottom:1px solid rgba(255,255,255,.07);
+  background:#13131f;flex-shrink:0
+}
+.header-left{display:flex;align-items:center;gap:12px}
+.brand-badge{
+  padding:4px 12px;border-radius:99px;font-size:11px;font-weight:700;
+  letter-spacing:1px;border:1px solid rgba(124,58,237,.4);
+  background:rgba(124,58,237,.1);color:#a78bfa
+}
+.header-right{display:flex;align-items:center;gap:8px}
+.schedule-btn{
+  display:flex;align-items:center;gap:6px;padding:6px 14px;
+  border-radius:8px;border:1px solid rgba(124,58,237,.4);
+  background:rgba(124,58,237,.1);color:#a78bfa;font-size:12px;
+  font-weight:600;cursor:pointer;transition:all .2s;position:relative
+}
+.schedule-btn:hover{background:rgba(124,58,237,.2)}
+.notif-badge{
+  position:absolute;top:-4px;right:-4px;width:16px;height:16px;
+  border-radius:50%;background:#ef4444;font-size:9px;font-weight:700;
+  display:flex;align-items:center;justify-content:center
+}
+.icon-btn{
+  width:34px;height:34px;border-radius:8px;border:1px solid rgba(255,255,255,.1);
+  background:rgba(255,255,255,.05);display:flex;align-items:center;
+  justify-content:center;cursor:pointer;font-size:16px;transition:all .2s
+}
+.icon-btn:hover{background:rgba(255,255,255,.1)}
+.avatar{
+  width:34px;height:34px;border-radius:50%;
+  background:linear-gradient(135deg,#7c3aed,#ec4899);
+  display:flex;align-items:center;justify-content:center;
+  font-size:14px;font-weight:700;cursor:pointer
+}
+
+/* ── PAGE CONTENT ── */
+.page{flex:1;overflow-y:auto;display:none}
+.page.active{display:block}
+
+/* ── TABS ── */
+.tab-bar{
+  display:flex;gap:4px;padding:16px 20px 0;
+  border-bottom:1px solid rgba(255,255,255,.07)
+}
+.tab{
+  padding:8px 16px;border-radius:8px 8px 0 0;font-size:12px;
+  font-weight:600;color:#6b7280;cursor:pointer;transition:all .2s;
+  border-bottom:2px solid transparent
+}
+.tab:hover{color:#a78bfa}
+.tab.active{
+  color:#a78bfa;border-bottom:2px solid #7c3aed;
+  background:rgba(124,58,237,.08)
+}
+
+/* ── SECTION ── */
+.section{padding:20px}
+.section-eyebrow{
+  font-size:10px;font-weight:700;letter-spacing:2px;
+  color:#7c3aed;text-transform:uppercase;margin-bottom:6px
+}
+.section-title{font-size:22px;font-weight:800;margin-bottom:4px}
+.section-sub{font-size:13px;color:#6b7280;margin-bottom:20px}
+
+/* ── HERO BANNER ── */
+.hero{
+  margin:20px;border-radius:16px;padding:28px;
+  background:linear-gradient(135deg,#4c1d95,#7c3aed,#a21caf);
+  position:relative;overflow:hidden
+}
+.hero-blob1{
+  position:absolute;top:-40px;right:-40px;width:200px;height:200px;
+  border-radius:50%;background:rgba(255,255,255,.06);pointer-events:none
+}
+.hero-blob2{
+  position:absolute;bottom:-60px;left:20%;width:160px;height:160px;
+  border-radius:50%;background:rgba(255,255,255,.04);pointer-events:none
+}
+.hero-badge{
+  display:inline-flex;align-items:center;gap:6px;padding:4px 12px;
+  border-radius:99px;background:rgba(255,255,255,.15);
+  font-size:11px;font-weight:600;margin-bottom:14px
+}
+.pulse-dot{
+  width:6px;height:6px;border-radius:50%;background:#4ade80;
+  animation:pulse 2s infinite
+}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(1.4)}}
+.hero-title{font-size:28px;font-weight:900;line-height:1.15;margin-bottom:8px}
+.hero-title .shimmer{
+  background:linear-gradient(90deg,#fbbf24,#f472b6,#a78bfa);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-size:200%;animation:shimmer 3s infinite linear
+}
+@keyframes shimmer{0%{background-position:0%}100%{background-position:200%}}
+.hero-sub{font-size:13px;opacity:.85;margin-bottom:16px;line-height:1.6}
+.hero-chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:20px}
+.hero-chip{
+  padding:3px 10px;border-radius:99px;font-size:10px;font-weight:600;
+  background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.2)
+}
+.hero-bottom{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.hero-cta{
+  padding:10px 20px;border-radius:10px;border:none;font-size:13px;
+  font-weight:700;cursor:pointer;transition:all .2s
+}
+.hero-cta.primary{background:#fff;color:#7c3aed}
+.hero-cta.primary:hover{background:#f3f0ff}
+.hero-cta.secondary{
+  background:rgba(255,255,255,.15);color:#fff;
+  border:1px solid rgba(255,255,255,.3)
+}
+.hero-cta.secondary:hover{background:rgba(255,255,255,.25)}
+.hero-stats{
+  display:grid;grid-template-columns:repeat(2,1fr);gap:8px;
+  margin-top:16px
+}
+.hero-stat{
+  padding:10px;border-radius:10px;background:rgba(255,255,255,.1);
+  border:1px solid rgba(255,255,255,.15);text-align:center
+}
+.hero-stat-val{font-size:18px;font-weight:800}
+.hero-stat-label{font-size:10px;opacity:.75}
+
+/* ── SCRAPER ── */
+.scraper-wrap{
+  margin:0 20px 20px;border-radius:14px;
+  background:#13131f;border:1px solid rgba(255,255,255,.07);overflow:hidden
+}
+.scraper-header{
+  padding:16px 20px;background:linear-gradient(90deg,rgba(124,58,237,.15),rgba(162,28,175,.08));
+  border-bottom:1px solid rgba(255,255,255,.07);
+  display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:12px
+}
+.scraper-left .eyebrow{
+  font-size:10px;font-weight:700;letter-spacing:2px;
+  color:#a78bfa;margin-bottom:4px
+}
+.scraper-left h3{font-size:17px;font-weight:800;margin-bottom:4px}
+.scraper-left p{font-size:12px;color:#6b7280}
+.scraper-right{display:flex;flex-direction:column;align-items:flex-end;gap:6px}
+.tracked-badge{
+  padding:4px 12px;border-radius:99px;font-size:11px;font-weight:600;
+  background:rgba(124,58,237,.15);border:1px solid rgba(124,58,237,.3);color:#a78bfa
+}
+.refresh-btn{
+  display:flex;align-items:center;gap:6px;padding:7px 14px;
+  border-radius:8px;border:1px solid rgba(124,58,237,.4);
+  background:rgba(124,58,237,.1);color:#a78bfa;font-size:12px;
+  font-weight:600;cursor:pointer;transition:all .2s
+}
+.refresh-btn:hover{background:rgba(124,58,237,.2)}
+.refresh-btn.loading .spin{animation:spin .8s linear infinite}
+@keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+.countdown{font-size:10px;color:#6b7280}
+.scraper-cols{display:grid;grid-template-columns:1fr 1fr;gap:0}
+@media(max-width:768px){.scraper-cols{grid-template-columns:1fr}}
+.scraper-col{padding:16px;border-right:1px solid rgba(255,255,255,.07)}
+.scraper-col:last-child{border-right:none}
+.col-header{
+  display:flex;align-items:center;justify-content:space-between;margin-bottom:12px
+}
+.col-title{font-size:13px;font-weight:700}
+.col-sub{font-size:11px;color:#6b7280}
+.platform-badge{
+  padding:3px 10px;border-radius:99px;font-size:10px;font-weight:700
+}
+.platform-badge.youtube{background:#ef4444;color:#fff}
+.platform-badge.instagram{
+  background:linear-gradient(90deg,#f472b6,#a78bfa);color:#fff
+}
+.trend-card{
+  padding:12px;border-radius:10px;background:rgba(255,255,255,.03);
+  border:1px solid rgba(255,255,255,.07);margin-bottom:8px;
+  cursor:pointer;transition:all .2s
+}
+.trend-card:hover{background:rgba(124,58,237,.1);border-color:rgba(124,58,237,.3)}
+.trend-card.selected{background:rgba(124,58,237,.15);border-color:rgba(124,58,237,.5)}
+.trend-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px}
+.trend-title{font-size:13px;font-weight:600;line-height:1.4;flex:1}
+.score-badge{
+  width:28px;height:28px;border-radius:50%;display:flex;align-items:center;
+  justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;
+  background:linear-gradient(135deg,#7c3aed,#ec4899)
+}
+.trend-sub{font-size:11px;color:#6b7280;margin:4px 0 8px;line-height:1.4}
+.trend-meta{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.trend-meta span{font-size:10px;color:#6b7280}
+.trend-meta .dot{color:#374151}
+.trend-actions{display:flex;gap:6px;margin-top:8px}
+.use-topic-btn{
+  flex:1;padding:6px;border-radius:6px;border:none;font-size:11px;
+  font-weight:600;cursor:pointer;transition:all .2s;
+  background:linear-gradient(90deg,#7c3aed,#a21caf);color:#fff
+}
+.use-topic-btn:hover{opacity:.85}
+.save-btn{
+  padding:6px 10px;border-radius:6px;border:1px solid rgba(255,255,255,.1);
+  background:transparent;color:#9ca3af;font-size:11px;cursor:pointer;transition:all .2s
+}
+.save-btn:hover{background:rgba(255,255,255,.05);color:#fff}
+
+/* ── GENERATION SETTINGS ── */
+.gen-wrap{
+  margin:0 20px 20px;border-radius:14px;
+  background:#13131f;border:1px solid rgba(255,255,255,.07);overflow:hidden
+}
+.gen-header{
+  padding:14px 20px;background:linear-gradient(90deg,rgba(124,58,237,.1),transparent);
+  border-bottom:1px solid rgba(255,255,255,.07);
+  display:flex;align-items:center;gap:10px
+}
+.gen-header-icon{
+  width:32px;height:32px;border-radius:8px;
+  background:linear-gradient(135deg,#7c3aed,#ec4899);
+  display:flex;align-items:center;justify-content:center;font-size:16px
+}
+.gen-header h3{font-size:14px;font-weight:700}
+.gen-header p{font-size:11px;color:#6b7280}
+.gen-body{padding:16px 20px;display:flex;flex-direction:column;gap:16px}
+.gen-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+@media(max-width:640px){.gen-row{grid-template-columns:1fr}}
+.gen-group label{font-size:11px;font-weight:600;color:#9ca3af;margin-bottom:6px;display:block}
+.gen-options{display:flex;gap:4px;flex-wrap:wrap}
+.gen-opt{
+  flex:1;min-width:60px;padding:8px 10px;border-radius:8px;text-align:center;
+  font-size:11px;font-weight:600;cursor:pointer;transition:all .2s;
+  background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);color:#9ca3af
+}
+.gen-opt:hover{background:rgba(124,58,237,.1);color:#a78bfa;border-color:rgba(124,58,237,.3)}
+.gen-opt.active{
+  background:linear-gradient(135deg,rgba(124,58,237,.3),rgba(162,28,175,.2));
+  color:#a78bfa;border-color:rgba(124,58,237,.5)
+}
+.gen-opt-hint{font-size:9px;opacity:.6;margin-top:2px}
+.gen-output-bar{
+  padding:12px 16px;border-radius:10px;background:#0a0a14;
+  border:1px solid rgba(255,255,255,.07);
+  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px
+}
+.gen-output-item{text-align:center}
+.gen-output-label{font-size:9px;color:#6b7280;margin-bottom:2px}
+.gen-output-val{font-size:12px;font-weight:700;color:#a78bfa}
+.gen-cta{
+  display:flex;gap:10px;padding-top:4px;flex-wrap:wrap
+}
+.gen-generate-btn{
+  flex:1;min-width:160px;padding:12px;border-radius:10px;border:none;
+  background:linear-gradient(90deg,#7c3aed,#a21caf);color:#fff;
+  font-size:13px;font-weight:700;cursor:pointer;transition:all .2s;
+  display:flex;align-items:center;justify-content:center;gap:8px
+}
+.gen-generate-btn:hover{opacity:.9;transform:translateY(-1px)}
+.gen-schedule-btn{
+  padding:12px 20px;border-radius:10px;
+  border:1px solid rgba(124,58,237,.4);background:rgba(124,58,237,.1);
+  color:#a78bfa;font-size:13px;font-weight:600;cursor:pointer;transition:all .2s
+}
+.gen-schedule-btn:hover{background:rgba(124,58,237,.2)}
+
+/* ── PROGRESS BAR ── */
+.progress-wrap{
+  margin:0 20px 20px;border-radius:14px;
+  background:#13131f;border:1px solid rgba(124,58,237,.3);
+  padding:20px;display:none
+}
+.progress-wrap.show{display:block}
+.progress-title{font-size:14px;font-weight:700;margin-bottom:16px}
+.progress-stages{display:flex;flex-direction:column;gap:8px}
+.progress-stage{display:flex;align-items:center;gap:10px}
+.stage-icon{
+  width:28px;height:28px;border-radius:50%;display:flex;align-items:center;
+  justify-content:center;font-size:12px;flex-shrink:0;
+  background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1)
+}
+.stage-icon.done{background:rgba(34,197,94,.2);border-color:rgba(34,197,94,.4)}
+.stage-icon.active{
+  background:rgba(124,58,237,.2);border-color:rgba(124,58,237,.4);
+  animation:pulse 1s infinite
+}
+.stage-info{flex:1}
+.stage-name{font-size:12px;font-weight:600}
+.stage-bar{height:4px;border-radius:99px;background:rgba(255,255,255,.08);margin-top:4px}
+.stage-fill{height:4px;border-radius:99px;background:linear-gradient(90deg,#7c3aed,#ec4899);transition:width .5s}
+
+/* ── PROJECTS GRID ── */
+.projects-header{
+  padding:0 20px 12px;
+  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px
+}
+.projects-title-row{display:flex;align-items:center;gap:10px}
+.projects-search{
+  display:flex;align-items:center;gap:6px;
+  padding:6px 12px;border-radius:8px;border:1px solid rgba(255,255,255,.1);
+  background:rgba(255,255,255,.04);
+}
+.projects-search input{
+  background:transparent;border:none;outline:none;color:#fff;font-size:12px;width:160px
+}
+.filter-select{
+  padding:6px 10px;border-radius:8px;border:1px solid rgba(255,255,255,.1);
+  background:rgba(255,255,255,.04);color:#9ca3af;font-size:12px;cursor:pointer
+}
+.projects-grid{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));
+  gap:14px;padding:0 20px 20px
+}
+.project-card{
+  border-radius:12px;background:#13131f;border:1px solid rgba(255,255,255,.07);
+  overflow:hidden;cursor:pointer;transition:all .2s
+}
+.project-card:hover{border-color:rgba(124,58,237,.4);transform:translateY(-2px);box-shadow:0 8px 24px rgba(124,58,237,.15)}
+.project-card.selected{border-color:rgba(124,58,237,.6);box-shadow:0 0 0 2px rgba(124,58,237,.2)}
+.card-thumb{position:relative;aspect-ratio:16/9;overflow:hidden}
+.card-thumb-bg{
+  width:100%;height:100%;display:flex;align-items:center;justify-content:center;
+  font-size:32px;position:relative
+}
+.card-thumb-overlay{
+  position:absolute;inset:0;
+  background:linear-gradient(to top,rgba(0,0,0,.8),transparent)
+}
+.card-status{
+  position:absolute;top:8px;left:8px;padding:3px 8px;border-radius:99px;
+  font-size:10px;font-weight:700
+}
+.card-status.ready{background:rgba(34,197,94,.2);color:#4ade80;border:1px solid rgba(34,197,94,.3)}
+.card-status.generating{background:rgba(251,191,36,.2);color:#fbbf24;border:1px solid rgba(251,191,36,.3)}
+.card-status.scheduled{background:rgba(59,130,246,.2);color:#60a5fa;border:1px solid rgba(59,130,246,.3)}
+.card-res{
+  position:absolute;top:8px;right:8px;padding:2px 6px;border-radius:4px;
+  font-size:9px;font-weight:700;background:rgba(0,0,0,.6);border:1px solid rgba(255,255,255,.1)
+}
+.card-duration{
+  position:absolute;bottom:8px;left:8px;font-size:10px;font-weight:600;
+  background:rgba(0,0,0,.6);padding:2px 6px;border-radius:4px
+}
+.card-style{
+  position:absolute;bottom:8px;right:8px;font-size:10px;
+  background:rgba(0,0,0,.6);padding:2px 6px;border-radius:4px
+}
+.play-overlay{
+  position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  opacity:0;transition:opacity .2s
+}
+.project-card:hover .play-overlay{opacity:1}
+.play-circle{
+  width:44px;height:44px;border-radius:50%;background:rgba(124,58,237,.8);
+  display:flex;align-items:center;justify-content:center;font-size:18px
+}
+.card-body{padding:12px}
+.card-title{font-size:13px;font-weight:700;margin-bottom:6px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.card-stats{display:flex;gap:12px;margin-bottom:10px}
+.card-stat{font-size:11px;color:#6b7280;display:flex;align-items:center;gap:4px}
+.card-date{font-size:10px;color:#4b5563;margin-bottom:10px}
+.card-actions{display:grid;grid-template-columns:repeat(4,1fr);gap:4px}
+.card-btn{
+  padding:7px 4px;border-radius:7px;border:none;font-size:11px;font-weight:600;
+  cursor:pointer;transition:all .2s;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:2px
+}
+.card-btn .btn-icon{font-size:14px}
+.card-btn .btn-label{font-size:9px;font-weight:600}
+.card-btn.play{background:rgba(124,58,237,.15);color:#a78bfa;border:1px solid rgba(124,58,237,.2)}
+.card-btn.play:hover{background:rgba(124,58,237,.3)}
+.card-btn.share{background:rgba(6,182,212,.1);color:#22d3ee;border:1px solid rgba(6,182,212,.2)}
+.card-btn.share:hover{background:rgba(6,182,212,.2)}
+.card-btn.download{background:rgba(34,197,94,.1);color:#4ade80;border:1px solid rgba(34,197,94,.2)}
+.card-btn.download:hover{background:rgba(34,197,94,.2)}
+.card-btn.delete{background:rgba(239,68,68,.1);color:#f87171;border:1px solid rgba(239,68,68,.2)}
+.card-btn.delete:hover{background:rgba(239,68,68,.2)}
+
+/* ── VIDEO PLAYER MODAL ── */
+.modal-overlay{
+  position:fixed;inset:0;background:rgba(0,0,0,.9);z-index:1000;
+  display:none;align-items:center;justify-content:center;padding:20px
+}
+.modal-overlay.show{display:flex}
+.video-modal{
+  background:#13131f;border-radius:16px;border:1px solid rgba(124,58,237,.3);
+  width:100%;max-width:700px;overflow:hidden
+}
+.video-modal-header{
+  padding:14px 20px;display:flex;align-items:center;justify-content:space-between;
+  border-bottom:1px solid rgba(255,255,255,.07)
+}
+.video-modal-title{font-size:14px;font-weight:700}
+.close-btn{
+  width:30px;height:30px;border-radius:6px;border:none;
+  background:rgba(255,255,255,.06);color:#9ca3af;
+  cursor:pointer;font-size:16px;transition:all .2s
+}
+.close-btn:hover{background:rgba(255,255,255,.1);color:#fff}
+.video-player-area{
+  aspect-ratio:16/9;background:#000;position:relative;
+  display:flex;align-items:center;justify-content:center
+}
+.video-placeholder{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:12px;color:#6b7280
+}
+.video-play-btn{
+  width:64px;height:64px;border-radius:50%;
+  background:linear-gradient(135deg,#7c3aed,#ec4899);
+  display:flex;align-items:center;justify-content:center;
+  font-size:24px;cursor:pointer;border:none;color:#fff;transition:all .2s
+}
+.video-play-btn:hover{transform:scale(1.1)}
+.video-controls{
+  padding:14px 20px;border-top:1px solid rgba(255,255,255,.07)
+}
+.video-progress{
+  width:100%;height:4px;border-radius:99px;background:rgba(255,255,255,.1);
+  margin-bottom:10px;cursor:pointer;position:relative
+}
+.video-progress-fill{
+  width:35%;height:4px;border-radius:99px;
+  background:linear-gradient(90deg,#7c3aed,#ec4899)
+}
+.video-ctrl-row{
+  display:flex;align-items:center;justify-content:space-between
+}
+.ctrl-left,.ctrl-right{display:flex;align-items:center;gap:8px}
+.ctrl-btn{
+  background:none;border:none;color:#9ca3af;cursor:pointer;
+  font-size:16px;transition:all .2s;padding:4px
+}
+.ctrl-btn:hover{color:#fff}
+.time-display{font-size:11px;color:#6b7280}
+.volume-slider{width:60px;accent-color:#7c3aed}
+.video-modal-footer{
+  padding:12px 20px;display:flex;gap:8px;border-top:1px solid rgba(255,255,255,.07)
+}
+.modal-action-btn{
+  flex:1;padding:8px;border-radius:8px;border:none;font-size:12px;
+  font-weight:600;cursor:pointer;transition:all .2s
+}
+.modal-action-btn.primary{background:linear-gradient(90deg,#7c3aed,#a21caf);color:#fff}
+.modal-action-btn.secondary{
+  background:rgba(255,255,255,.06);color:#9ca3af;
+  border:1px solid rgba(255,255,255,.1)
+}
+.modal-action-btn:hover{opacity:.85}
+
+/* ── DELETE MODAL ── */
+.delete-modal{
+  background:#13131f;border-radius:14px;border:1px solid rgba(239,68,68,.3);
+  width:100%;max-width:380px;padding:24px;text-align:center
+}
+.delete-modal-icon{font-size:40px;margin-bottom:12px}
+.delete-modal-title{font-size:16px;font-weight:700;margin-bottom:6px}
+.delete-modal-sub{font-size:13px;color:#6b7280;margin-bottom:20px}
+.delete-modal-actions{display:flex;gap:8px}
+.delete-cancel{
+  flex:1;padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,.1);
+  background:transparent;color:#9ca3af;font-size:13px;cursor:pointer;transition:all .2s
+}
+.delete-cancel:hover{background:rgba(255,255,255,.05);color:#fff}
+.delete-confirm{
+  flex:1;padding:10px;border-radius:8px;border:none;
+  background:linear-gradient(90deg,#ef4444,#dc2626);
+  color:#fff;font-size:13px;font-weight:700;cursor:pointer;transition:all .2s
+}
+.delete-confirm:hover{opacity:.85}
+
+/* ── SCHEDULE MODAL ── */
+.schedule-modal{
+  background:#13131f;border-radius:16px;border:1px solid rgba(124,58,237,.3);
+  width:100%;max-width:420px;overflow:hidden
+}
+.schedule-modal-header{
+  padding:16px 20px;background:linear-gradient(90deg,rgba(124,58,237,.15),transparent);
+  border-bottom:1px solid rgba(255,255,255,.07);
+  display:flex;align-items:center;justify-content:space-between
+}
+.schedule-body{padding:20px;display:flex;flex-direction:column;gap:14px}
+.schedule-topic-chip{
+  padding:8px 12px;border-radius:8px;background:rgba(124,58,237,.1);
+  border:1px solid rgba(124,58,237,.2);font-size:12px;color:#a78bfa
+}
+.schedule-dt-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.schedule-input-group label{
+  font-size:11px;font-weight:600;color:#9ca3af;margin-bottom:4px;display:block
+}
+.schedule-input{
+  width:100%;padding:8px 10px;border-radius:8px;border:1px solid rgba(255,255,255,.1);
+  background:rgba(255,255,255,.04);color:#fff;font-size:12px
+}
+.schedule-platforms{display:flex;gap:6px;flex-wrap:wrap}
+.platform-chip{
+  padding:5px 10px;border-radius:6px;font-size:11px;font-weight:600;
+  background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);cursor:pointer
+}
+.platform-chip.active{
+  background:rgba(124,58,237,.2);border-color:rgba(124,58,237,.4);color:#a78bfa
+}
+.schedule-preview{
+  padding:10px;border-radius:8px;background:rgba(124,58,237,.08);
+  border:1px solid rgba(124,58,237,.2);font-size:12px;color:#a78bfa
+}
+.schedule-actions{display:grid;grid-template-columns:1fr 2fr;gap:8px}
+.schedule-cancel{
+  padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,.1);
+  background:transparent;color:#9ca3af;font-size:13px;cursor:pointer
+}
+.schedule-confirm{
+  padding:10px;border-radius:8px;border:none;
+  background:linear-gradient(90deg,#7c3aed,#a21caf);
+  color:#fff;font-size:13px;font-weight:700;cursor:pointer
+}
+
+/* ── STUDIO PAGE ── */
+.studio-hero{
+  margin:20px;border-radius:16px;padding:28px;
+  background:linear-gradient(135deg,#4c1d95,#7c3aed,#a21caf);
+  position:relative;overflow:hidden
+}
+.studio-cards{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:14px;
+  padding:0 20px 20px
+}
+@media(max-width:900px){.studio-cards{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:600px){.studio-cards{grid-template-columns:1fr}}
+.studio-card{
+  border-radius:12px;background:#13131f;border:1px solid rgba(255,255,255,.07);
+  padding:18px;cursor:pointer;transition:all .2s
+}
+.studio-card:hover{border-color:rgba(124,58,237,.4);transform:translateY(-2px);box-shadow:0 8px 24px rgba(124,58,237,.12)}
+.studio-card-icon{
+  width:44px;height:44px;border-radius:10px;display:flex;align-items:center;
+  justify-content:center;font-size:22px;margin-bottom:12px
+}
+.studio-card-title{font-size:14px;font-weight:700;margin-bottom:4px}
+.studio-card-sub{font-size:12px;color:#6b7280;margin-bottom:14px}
+.studio-card-content{display:none}
+.studio-card.expanded .studio-card-content{display:block}
+.voice-gender-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
+.voice-gender-card{
+  padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,.1);
+  background:rgba(255,255,255,.03);text-align:center;cursor:pointer;transition:all .2s
+}
+.voice-gender-card:hover{border-color:rgba(124,58,237,.3);background:rgba(124,58,237,.08)}
+.voice-gender-card.active{
+  border-color:rgba(124,58,237,.5);background:rgba(124,58,237,.15)
+}
+.voice-gender-icon{font-size:24px;margin-bottom:4px}
+.voice-gender-name{font-size:12px;font-weight:700}
+.voice-names{font-size:10px;color:#6b7280;margin-top:2px}
+.voice-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:12px}
+.voice-card{
+  padding:8px;border-radius:7px;border:1px solid rgba(255,255,255,.07);
+  background:rgba(255,255,255,.03);text-align:center;cursor:pointer;transition:all .2s;
+  font-size:11px;font-weight:600
+}
+.voice-card:hover{border-color:rgba(124,58,237,.3)}
+.voice-card.active{
+  border-color:rgba(124,58,237,.5);background:rgba(124,58,237,.15);color:#a78bfa
+}
+.slider-group{margin-bottom:10px}
+.slider-label{font-size:11px;font-weight:600;color:#9ca3af;margin-bottom:4px;
+  display:flex;justify-content:space-between}
+input[type=range]{width:100%;accent-color:#7c3aed;height:4px}
+.test-voice-btn{
+  width:100%;padding:9px;border-radius:8px;border:none;
+  background:linear-gradient(90deg,#7c3aed,#a21caf);color:#fff;
+  font-size:12px;font-weight:700;cursor:pointer;display:flex;align-items:center;
+  justify-content:center;gap:8px
+}
+.waveform{display:flex;align-items:center;gap:2px;height:16px}
+.wave-bar{
+  width:3px;border-radius:99px;background:#fff;
+  animation:wave .6s ease-in-out infinite
+}
+.wave-bar:nth-child(2){animation-delay:.1s;height:10px}
+.wave-bar:nth-child(3){animation-delay:.2s;height:14px}
+.wave-bar:nth-child(4){animation-delay:.3s;height:8px}
+.wave-bar:nth-child(5){animation-delay:.4s;height:12px}
+@keyframes wave{0%,100%{transform:scaleY(1)}50%{transform:scaleY(1.8)}}
+
+/* ── THUMBNAIL PAGE ── */
+.thumb-layout{
+  display:grid;grid-template-columns:3fr 2fr;gap:16px;padding:0 20px 20px
+}
+@media(max-width:768px){.thumb-layout{grid-template-columns:1fr}}
+.thumb-preview-card{
+  border-radius:12px;background:#13131f;border:1px solid rgba(255,255,255,.07);
+  overflow:hidden
+}
+.thumb-canvas-wrap{
+  aspect-ratio:16/9;background:#0a0a14;position:relative;
+  display:flex;align-items:center;justify-content:center
+}
+canvas#thumbCanvas{width:100%;height:100%}
+.thumb-actions{
+  padding:12px;display:flex;gap:8px;border-top:1px solid rgba(255,255,255,.07)
+}
+.thumb-action-btn{
+  flex:1;padding:9px;border-radius:8px;border:none;font-size:12px;
+  font-weight:600;cursor:pointer;transition:all .2s
+}
+.thumb-action-btn.primary{background:linear-gradient(90deg,#7c3aed,#a21caf);color:#fff}
+.thumb-action-btn.secondary{
+  background:rgba(255,255,255,.06);color:#9ca3af;border:1px solid rgba(255,255,255,.1)
+}
+.thumb-controls-card{
+  border-radius:12px;background:#13131f;border:1px solid rgba(255,255,255,.07);
+  padding:16px;display:flex;flex-direction:column;gap:14px
+}
+.style-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:6px}
+.style-card{
+  padding:10px 8px;border-radius:8px;border:1px solid rgba(255,255,255,.07);
+  background:rgba(255,255,255,.03);text-align:center;cursor:pointer;transition:all .2s
+}
+.style-card:hover{border-color:rgba(124,58,237,.3)}
+.style-card.active{border-color:rgba(124,58,237,.5);background:rgba(124,58,237,.12)}
+.style-card-icon{font-size:20px;margin-bottom:4px}
+.style-card-name{font-size:11px;font-weight:600}
+.color-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:6px}
+.color-swatch{
+  aspect-ratio:1;border-radius:6px;cursor:pointer;transition:all .2s;
+  border:2px solid transparent
+}
+.color-swatch:hover,.color-swatch.active{border-color:#fff;transform:scale(1.1)}
+
+/* ── ANALYTICS ── */
+.analytics-stats{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:12px;
+  padding:0 20px 20px
+}
+@media(max-width:768px){.analytics-stats{grid-template-columns:repeat(2,1fr)}}
+.analytics-card{
+  padding:16px;border-radius:12px;background:#13131f;
+  border:1px solid rgba(255,255,255,.07)
+}
+.analytics-card-val{font-size:24px;font-weight:800;margin-bottom:4px}
+.analytics-card-label{font-size:12px;color:#6b7280;margin-bottom:8px}
+.analytics-card-trend{font-size:11px;display:flex;align-items:center;gap:4px}
+.analytics-card-trend.up{color:#4ade80}
+.analytics-card-trend.down{color:#f87171}
+.chart-wrap{
+  margin:0 20px 20px;border-radius:12px;background:#13131f;
+  border:1px solid rgba(255,255,255,.07);padding:20px
+}
+.chart-bars{display:flex;align-items:flex-end;gap:6px;height:120px;margin-top:12px}
+.chart-bar-wrap{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px}
+.chart-bar{
+  width:100%;border-radius:4px 4px 0 0;min-height:4px;
+  background:linear-gradient(to top,#7c3aed,#a78bfa);transition:height .5s
+}
+.chart-label{font-size:9px;color:#6b7280}
+
+/* ── SETTINGS ── */
+.settings-tabs{
+  display:flex;gap:2px;padding:16px 20px 0;overflow-x:auto
+}
+.settings-tab{
+  padding:8px 14px;border-radius:8px 8px 0 0;font-size:12px;font-weight:600;
+  color:#6b7280;cursor:pointer;transition:all .2s;white-space:nowrap;
+  border-bottom:2px solid transparent
+}
+.settings-tab:hover{color:#a78bfa}
+.settings-tab.active{
+  color:#a78bfa;border-bottom:2px solid #7c3aed;background:rgba(124,58,237,.08)
+}
+.settings-body{padding:20px;display:none}
+.settings-body.active{display:block}
+.platform-config-card{
+  border-radius:12px;background:#13131f;border:1px solid rgba(255,255,255,.07);
+  padding:16px;margin-bottom:12px
+}
+.platform-config-header{
+  display:flex;align-items:center;justify-content:space-between;margin-bottom:14px
+}
+.platform-config-title{display:flex;align-items:center;gap:8px;font-size:14px;font-weight:700}
+.status-dot{
+  width:8px;height:8px;border-radius:50%;background:#4ade80
+}
+.config-input{
+  width:100%;padding:8px 10px;border-radius:8px;margin-bottom:8px;
+  border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.04);
+  color:#fff;font-size:12px
+}
+.connect-btn{
+  width:100%;padding:9px;border-radius:8px;border:none;font-size:12px;
+  font-weight:600;cursor:pointer;
+  background:linear-gradient(90deg,#7c3aed,#a21caf);color:#fff
+}
+.toggle-row{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:8px 0;border-bottom:1px solid rgba(255,255,255,.05)
+}
+.toggle-row:last-child{border-bottom:none}
+.toggle-label{font-size:12px;font-weight:600}
+.toggle-sub{font-size:11px;color:#6b7280}
+.toggle-switch{
+  width:40px;height:22px;border-radius:99px;background:rgba(255,255,255,.1);
+  position:relative;cursor:pointer;transition:all .3s
+}
+.toggle-switch.on{background:linear-gradient(90deg,#7c3aed,#a21caf)}
+.toggle-thumb{
+  width:18px;height:18px;border-radius:50%;background:#fff;
+  position:absolute;top:2px;left:2px;transition:left .3s;box-shadow:0 2px 4px rgba(0,0,0,.3)
+}
+.toggle-switch.on .toggle-thumb{left:20px}
+.days-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-top:6px}
+.day-btn{
+  padding:5px 0;border-radius:6px;border:1px solid rgba(255,255,255,.08);
+  background:rgba(255,255,255,.03);font-size:10px;font-weight:600;
+  color:#6b7280;cursor:pointer;text-align:center;transition:all .2s
+}
+.day-btn.active{
+  background:rgba(124,58,237,.2);border-color:rgba(124,58,237,.4);color:#a78bfa
+}
+
+/* ── WHAT'S NEW ── */
+.whats-new-hero{
+  margin:20px;border-radius:16px;padding:28px;
+  background:linear-gradient(135deg,#1e1b4b,#4c1d95,#7c3aed);
+  position:relative;overflow:hidden
+}
+.pricing-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:14px;
+  padding:0 20px 20px
+}
+@media(max-width:768px){.pricing-grid{grid-template-columns:1fr}}
+.pricing-card{
+  border-radius:12px;background:#13131f;border:1px solid rgba(255,255,255,.07);
+  padding:20px;text-align:center;position:relative;transition:all .2s
+}
+.pricing-card:hover{border-color:rgba(124,58,237,.4);transform:translateY(-2px)}
+.pricing-card.popular{border-color:rgba(124,58,237,.5);box-shadow:0 0 0 2px rgba(124,58,237,.2)}
+.popular-badge{
+  position:absolute;top:-10px;left:50%;transform:translateX(-50%);
+  padding:4px 14px;border-radius:99px;font-size:10px;font-weight:700;
+  background:linear-gradient(90deg,#7c3aed,#a21caf)
+}
+.pricing-plan{font-size:13px;font-weight:700;color:#9ca3af;margin-bottom:8px}
+.pricing-price{font-size:28px;font-weight:900;margin-bottom:4px}
+.pricing-price span{font-size:14px;font-weight:400;color:#6b7280}
+.pricing-videos{font-size:12px;color:#6b7280;margin-bottom:16px}
+.pricing-features{text-align:left;margin-bottom:16px;display:flex;flex-direction:column;gap:6px}
+.pricing-feature{font-size:12px;display:flex;align-items:center;gap:6px}
+.pricing-feature .check{color:#4ade80}
+.pricing-btn{
+  width:100%;padding:10px;border-radius:8px;border:none;font-size:13px;
+  font-weight:700;cursor:pointer;
+  background:linear-gradient(90deg,#7c3aed,#a21caf);color:#fff
+}
+
+/* ── REVIEWS ── */
+.reviews-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:14px;
+  padding:0 20px 20px
+}
+@media(max-width:900px){.reviews-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:600px){.reviews-grid{grid-template-columns:1fr}}
+.review-card{
+  border-radius:12px;background:#13131f;border:1px solid rgba(255,255,255,.07);
+  padding:18px
+}
+.review-stars{display:flex;gap:2px;margin-bottom:10px}
+.star{color:#fbbf24;font-size:14px}
+.review-text{font-size:13px;line-height:1.6;color:#d1d5db;margin-bottom:14px}
+.review-author{display:flex;align-items:center;gap:10px}
+.review-avatar{
+  width:36px;height:36px;border-radius:50%;display:flex;align-items:center;
+  justify-content:center;font-size:14px;font-weight:700;flex-shrink:0
+}
+.review-name{font-size:13px;font-weight:700}
+.review-role{font-size:11px;color:#6b7280}
+.review-metric{
+  margin-left:auto;padding:4px 10px;border-radius:99px;font-size:11px;font-weight:700;
+  background:rgba(34,197,94,.1);color:#4ade80;border:1px solid rgba(34,197,94,.2)
+}
+
+/* ── TOAST ── */
+.toast{
+  position:fixed;bottom:24px;right:24px;padding:12px 18px;border-radius:10px;
+  background:#1f2937;border:1px solid rgba(255,255,255,.1);color:#fff;
+  font-size:13px;font-weight:500;z-index:9999;transform:translateY(80px);
+  transition:transform .3s;box-shadow:0 8px 24px rgba(0,0,0,.4);
+  display:flex;align-items:center;gap:8px;max-width:320px
+}
+.toast.show{transform:translateY(0)}
+.toast.success{border-color:rgba(34,197,94,.3)}
+.toast.error{border-color:rgba(239,68,68,.3)}
+.toast.info{border-color:rgba(124,58,237,.3)}
+
+/* ── MOBILE SIDEBAR ── */
+.mobile-sidebar-overlay{
+  display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:49
+}
+.mobile-sidebar-overlay.show{display:block}
+.hamburger{
+  display:none;background:none;border:none;color:#fff;font-size:20px;cursor:pointer
+}
+@media(max-width:768px){
+  .hamburger{display:block}
+  .sidebar{position:fixed;top:0;left:0;height:100%;transform:translateX(-100%);z-index:50}
+  .sidebar.open{transform:translateX(0)}
+  .main{width:100%}
+  .scraper-cols{grid-template-columns:1fr}
+  .analytics-stats{grid-template-columns:repeat(2,1fr)}
+  .studio-cards{grid-template-columns:1fr}
+  .gen-row{grid-template-columns:1fr}
+  .thumb-layout{grid-template-columns:1fr}
+  .pricing-grid{grid-template-columns:1fr}
+}
+
+/* ── LOADING SPINNER ── */
+.spinner{
+  width:20px;height:20px;border:2px solid rgba(255,255,255,.2);
+  border-top-color:#a78bfa;border-radius:50%;animation:spin .8s linear infinite
+}
+</style>
+</head>
+<body>
+<div class="app-shell">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-row">
+        <div class="logo-icon">🎬</div>
+        <div>
+          <div class="logo-text">Bamania's <span>Cine AI</span></div>
+          <div class="logo-sub">Cinematic Video Studio</div>
+        </div>
+      </div>
+    </div>
+    <div class="workspace-card">
+      <div class="workspace-label">WORKSPACE</div>
+      <div class="workspace-desc">Manage videos, analytics, trending inputs, and publishing from one clean dashboard.</div>
+    </div>
+    <div class="nav-label">NAVIGATION</div>
+    <div class="nav-item active" onclick="navigate('projects',this)">📁 Projects</div>
+    <div class="nav-item" onclick="navigate('studio',this)">🎬 Studio</div>
+    <div class="nav-item" onclick="navigate('thumbnail',this)">🖼️ Thumbnail</div>
+    <div class="nav-item" onclick="navigate('analytics',this)">📊 Analytics</div>
+    <div class="nav-item" onclick="navigate('settings',this)">⚙️ Settings</div>
+    <div class="nav-item" onclick="navigate('whats-new',this)">✨ What's New <span class="badge">NEW</span></div>
+    <div class="pro-plan-card">
+      <div class="pro-plan-row"><span>👑</span><span class="pro-plan-title">Pro Plan</span></div>
+      <div class="pro-plan-sub">847 / 1000 credits used</div>
+      <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:84.7%"></div></div>
+      <div class="pro-price">₹2,999/month · ₹6 per video</div>
+      <button class="upgrade-btn" onclick="showToast('Opening pricing plans…','info')">Upgrade Plan</button>
+    </div>
+  </aside>
+
+  <!-- MOBILE OVERLAY -->
+  <div class="mobile-sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
+
+  <!-- MAIN -->
+  <div class="main">
+
+    <!-- HEADER -->
+    <div class="header">
+      <div class="header-left">
+        <button class="hamburger" onclick="openSidebar()">☰</button>
+        <div class="brand-badge">BAMANIA'S CINE AI</div>
+      </div>
+      <div class="header-right">
+        <button class="schedule-btn" onclick="openScheduleModal()">
+          📅 Schedule
+          <span class="notif-badge">1</span>
+        </button>
+        <div class="icon-btn" onclick="showToast('Settings opened','info')">⚙️</div>
+        <div class="avatar">U</div>
+      </div>
+    </div>
+
+    <!-- ══════════ PROJECTS PAGE ══════════ -->
+    <div class="page active" id="page-projects">
+
+      <!-- AUTO SCRAPER -->
+      <div class="scraper-wrap" style="margin-top:20px">
+        <div class="scraper-header">
+          <div class="scraper-left">
+            <div class="eyebrow">AUTO SCRAPER</div>
+            <h3>Viral YouTube Videos &amp; Trending Instagram Reels</h3>
+            <p>Automatically discovers high-performing content patterns for your next Hindi cinematic video.</p>
+            <div id="lastUpdated" style="font-size:10px;color:#6b7280;margin-top:6px">Last updated: just now</div>
+          </div>
+          <div class="scraper-right">
+            <div class="tracked-badge">● 6 viral items tracked</div>
+            <button class="refresh-btn" id="refreshBtn" onclick="refreshTrends()">
+              <span id="refreshIcon">🔄</span>
+              <span id="refreshText">Refresh Trends</span>
+            </button>
+            <div class="countdown" id="countdown">⏱ Auto-refresh in 5:00</div>
+          </div>
+        </div>
+        <div class="scraper-cols">
+          <!-- YOUTUBE -->
+          <div class="scraper-col">
+            <div class="col-header">
+              <div>
+                <div class="col-title">YouTube Viral Videos</div>
+                <div class="col-sub">Detected short-form winners ready to repurpose.</div>
+              </div>
+              <span class="platform-badge youtube">YouTube</span>
+            </div>
+            <div class="trend-card" onclick="useTopic(this,'Morning Routine Secrets of High Performers')">
+              <div class="trend-top">
+                <div class="trend-title">Morning Routine Secrets of High Performers</div>
+                <div class="score-badge">97</div>
+              </div>
+              <div class="trend-sub">High-retention YouTube Short format with strong hook and lifestyle visuals.</div>
+              <div class="trend-meta">
+                <span>Growth Lab</span><span class="dot">•</span>
+                <span>12M views</span><span class="dot">•</span>
+                <span>0:58</span><span class="dot">•</span>
+                <span>2 days ago</span>
+              </div>
+              <div class="trend-actions">
+                <button class="use-topic-btn" onclick="event.stopPropagation();useTopic(this.closest('.trend-card'),'Morning Routine Secrets of High Performers')">Use Topic</button>
+                <button class="save-btn" onclick="event.stopPropagation();showToast('Trend saved!','success')">Save</button>
+              </div>
+            </div>
+            <div class="trend-card" onclick="useTopic(this,'AI Tools That Will Replace Old Workflows')">
+              <div class="trend-top">
+                <div class="trend-title">AI Tools That Will Replace Old Workflows</div>
+                <div class="score-badge">93</div>
+              </div>
+              <div class="trend-sub">Tech trend short performing well across productivity niches.</div>
+              <div class="trend-meta">
+                <span>Tech Insider</span><span class="dot">•</span>
+                <span>8.5M views</span><span class="dot">•</span>
+                <span>1:24</span><span class="dot">•</span>
+                <span>1 day ago</span>
+              </div>
+              <div class="trend-actions">
+                <button class="use-topic-btn" onclick="event.stopPropagation();useTopic(this.closest('.trend-card'),'AI Tools That Will Replace Old Workflows')">Use Topic</button>
+                <button class="save-btn" onclick="event.stopPropagation();showToast('Trend saved!','success')">Save</button>
+              </div>
+            </div>
+            <div class="trend-card" onclick="useTopic(this,'5 Habits That Changed My Life Forever')">
+              <div class="trend-top">
+                <div class="trend-title">5 Habits That Changed My Life Forever</div>
+                <div class="score-badge">91</div>
+              </div>
+              <div class="trend-sub">Personal development content with emotional storytelling hook.</div>
+              <div class="trend-meta">
+                <span>Life Mastery</span><span class="dot">•</span>
+                <span>6.2M views</span><span class="dot">•</span>
+                <span>2:15</span><span class="dot">•</span>
+                <span>3 days ago</span>
+              </div>
+              <div class="trend-actions">
+                <button class="use-topic-btn" onclick="event.stopPropagation();useTopic(this.closest('.trend-card'),'5 Habits That Changed My Life Forever')">Use Topic</button>
+                <button class="save-btn" onclick="event.stopPropagation();showToast('Trend saved!','success')">Save</button>
+              </div>
+            </div>
+          </div>
+          <!-- INSTAGRAM -->
+          <div class="scraper-col">
+            <div class="col-header">
+              <div>
+                <div class="col-title">Instagram Trending Reels</div>
+                <div class="col-sub">Hooks and formats rising fast across Reels.</div>
+              </div>
+              <span class="platform-badge instagram">Instagram</span>
+            </div>
+            <div class="trend-card" onclick="useTopic(this,'3 Reel Hooks That Instantly Boost Watch Time')">
+              <div class="trend-top">
+                <div class="trend-title">3 Reel Hooks That Instantly Boost Watch Time</div>
+                <div class="score-badge">95</div>
+              </div>
+              <div class="trend-sub">Short-form Instagram structure built around fast hooks and bold captions.</div>
+              <div class="trend-meta">
+                <span>@growthreels</span><span class="dot">•</span>
+                <span>3.1M plays</span><span class="dot">•</span>
+                <span>0:32</span><span class="dot">•</span>
+                <span>5 hours ago</span>
+              </div>
+              <div class="trend-actions">
+                <button class="use-topic-btn" onclick="event.stopPropagation();useTopic(this.closest('.trend-card'),'3 Reel Hooks That Instantly Boost Watch Time')">Use Topic</button>
+                <button class="save-btn" onclick="event.stopPropagation();showToast('Trend saved!','success')">Save</button>
+              </div>
+            </div>
+            <div class="trend-card" onclick="useTopic(this,'Luxury Cinematic B-Roll Ideas for Viral Reels')">
+              <div class="trend-top">
+                <div class="trend-title">Luxury Cinematic B-Roll Ideas for Viral Reels</div>
+                <div class="score-badge">91</div>
+              </div>
+              <div class="trend-sub">Premium aesthetic transitions and smooth camera movements.</div>
+              <div class="trend-meta">
+                <span>@cinematicpro</span><span class="dot">•</span>
+                <span>2.8M plays</span><span class="dot">•</span>
+                <span>0:45</span><span class="dot">•</span>
+                <span>8 hours ago</span>
+              </div>
+              <div class="trend-actions">
+                <button class="use-topic-btn" onclick="event.stopPropagation();useTopic(this.closest('.trend-card'),'Luxury Cinematic B-Roll Ideas for Viral Reels')">Use Topic</button>
+                <button class="save-btn" onclick="event.stopPropagation();showToast('Trend saved!','success')">Save</button>
+              </div>
+            </div>
+            <div class="trend-card" onclick="useTopic(this,'Behind The Scenes of Viral Content Creation')">
+              <div class="trend-top">
+                <div class="trend-title">Behind The Scenes of Viral Content Creation</div>
+                <div class="score-badge">89</div>
+              </div>
+              <div class="trend-sub">Authentic BTS content showing the creative process.</div>
+              <div class="trend-meta">
+                <span>@creatorlife</span><span class="dot">•</span>
+                <span>1.9M plays</span><span class="dot">•</span>
+                <span>1:12</span><span class="dot">•</span>
+                <span>12 hours ago</span>
+              </div>
+              <div class="trend-actions">
+                <button class="use-topic-btn" onclick="event.stopPropagation();useTopic(this.closest('.trend-card'),'Behind The Scenes of Viral Content Creation')">Use Topic</button>
+                <button class="save-btn" onclick="event.stopPropagation();showToast('Trend saved!','success')">Save</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- HERO BANNER -->
+      <div class="hero">
+        <div class="hero-blob1"></div><div class="hero-blob2"></div>
+        <div class="hero-badge"><span class="pulse-dot"></span>AI-Powered · Live</div>
+        <div class="hero-title">Create Cinematic<br><span class="shimmer">Videos in Minutes</span></div>
+        <div class="hero-sub">Trending topic → Hindi script → Cinematic visuals → Voice → Video → Auto publish</div>
+        <div class="hero-chips">
+          <span class="hero-chip">⚡ Short</span><span class="hero-chip">🎬 Long</span>
+          <span class="hero-chip">🔲 4K</span><span class="hero-chip">📐 9:16</span>
+          <span class="hero-chip">🤖 Auto Publish</span><span class="hero-chip">🇮🇳 Hindi AI</span>
+        </div>
+        <div class="hero-stats">
+          <div class="hero-stat"><div class="hero-stat-val" id="heroVidCount">127</div><div class="hero-stat-label">Videos Generated</div></div>
+          <div class="hero-stat"><div class="hero-stat-val">1</div><div class="hero-stat-label">Scheduled Posts</div></div>
+          <div class="hero-stat"><div class="hero-stat-val">6</div><div class="hero-stat-label">Trending Topics</div></div>
+          <div class="hero-stat"><div class="hero-stat-val">153</div><div class="hero-stat-label">Credits Left</div></div>
+        </div>
+        <div class="hero-bottom" style="margin-top:16px">
+          <button class="hero-cta primary" onclick="scrollToGen()">⚡ Generate Video</button>
+          <button class="hero-cta secondary" onclick="openScheduleModal()">📅 Schedule Post</button>
+        </div>
+      </div>
+
+      <!-- GENERATION SETTINGS -->
+      <div class="gen-wrap" id="genSection">
+        <div class="gen-header">
+          <div class="gen-header-icon">⚙️</div>
+          <div>
+            <h3>Generation Settings</h3>
+            <p>Configure your cinematic video output</p>
+          </div>
+        </div>
+        <div class="gen-body">
+          <!-- Selected Topic Banner -->
+          <div id="selectedTopicBanner" style="display:none;padding:10px 14px;border-radius:8px;background:rgba(124,58,237,.1);border:1px solid rgba(124,58,237,.3);display:none;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
+            <div style="font-size:12px;color:#a78bfa">
+              <span style="font-size:10px;opacity:.7">Selected Topic: </span>
+              <span id="selectedTopicText" style="font-weight:700"></span>
+            </div>
+            <button onclick="clearTopic()" style="background:none;border:none;color:#6b7280;cursor:pointer;font-size:11px">✕ Clear</button>
+          </div>
+          <div class="gen-row">
+            <div class="gen-group">
+              <label>⏱ Video Length</label>
+              <div class="gen-options">
+                <div class="gen-opt active" onclick="selectOpt(this,'length')">
+                  Short<div class="gen-opt-hint">15–90s</div>
+                </div>
+                <div class="gen-opt" onclick="selectOpt(this,'length')">
+                  Long<div class="gen-opt-hint">3–15min</div>
+                </div>
+              </div>
+            </div>
+            <div class="gen-group">
+              <label>🔲 Resolution</label>
+              <div class="gen-options">
+                <div class="gen-opt active" onclick="selectOpt(this,'res')">
+                  HD<div class="gen-opt-hint">1080p</div>
+                </div>
+                <div class="gen-opt" onclick="selectOpt(this,'res')">
+                  2K<div class="gen-opt-hint">1440p</div>
+                </div>
+                <div class="gen-opt" onclick="selectOpt(this,'res')">
+                  4K<div class="gen-opt-hint">2160p</div>
+                </div>
+              </div>
+            </div>
+            <div class="gen-group">
+              <label>📐 Aspect Ratio</label>
+              <div class="gen-options">
+                <div class="gen-opt active" onclick="selectOpt(this,'ratio')">9:16</div>
+                <div class="gen-opt" onclick="selectOpt(this,'ratio')">16:9</div>
+                <div class="gen-opt" onclick="selectOpt(this,'ratio')">1:1</div>
+                <div class="gen-opt" onclick="selectOpt(this,'ratio')">4:5</div>
+              </div>
+            </div>
+          </div>
+          <div class="gen-output-bar">
+            <div class="gen-output-item"><div class="gen-output-label">Length</div><div class="gen-output-val" id="outLength">Short · 60s</div></div>
+            <div class="gen-output-item"><div class="gen-output-label">Resolution</div><div class="gen-output-val" id="outRes">HD · 1080p</div></div>
+            <div class="gen-output-item"><div class="gen-output-label">Ratio</div><div class="gen-output-val" id="outRatio">9:16 · Shorts</div></div>
+            <div class="gen-output-item"><div class="gen-output-label">Export</div><div class="gen-output-val">MP4 · H.264</div></div>
+          </div>
+          <div class="gen-cta">
+            <button class="gen-generate-btn" id="generateBtn" onclick="startGeneration()">
+              <span id="generateBtnIcon">⚡</span>
+              <span id="generateBtnText">Generate Video</span>
+            </button>
+            <button class="gen-schedule-btn" onclick="openScheduleModal()">📅 Schedule Post</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- PROGRESS -->
+      <div class="progress-wrap" id="progressWrap">
+        <div class="progress-title">🎬 Generating Cinematic Video…</div>
+        <div class="progress-stages" id="progressStages"></div>
+      </div>
+
+      <!-- PROJECTS HEADER -->
+      <div class="projects-header" id="generated-projects">
+        <div class="projects-title-row">
+          <div>
+            <div class="section-eyebrow">CONTENT LIBRARY</div>
+            <div style="font-size:18px;font-weight:800">Generated Projects</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+          <div class="projects-search">
+            <span>🔍</span>
+            <input type="text" placeholder="Search projects…" oninput="filterProjects(this.value)" id="searchInput"/>
+          </div>
+          <select class="filter-select" onchange="filterByStatus(this.value)">
+            <option value="all">All Status</option>
+            <option value="Ready">Ready</option>
+            <option value="Generating">Generating</option>
+            <option value="Scheduled">Scheduled</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- PROJECTS GRID -->
+      <div class="projects-grid" id="projectsGrid"></div>
+
+      <!-- REVIEWS -->
+      <div style="padding:0 20px;margin-bottom:8px">
+        <div class="section-eyebrow">TESTIMONIALS</div>
+        <div style="font-size:18px;font-weight:800;margin-bottom:4px">Creator Reviews</div>
+        <div style="font-size:13px;color:#6b7280;margin-bottom:16px">What creators say about Bamania's Cine AI</div>
+      </div>
+      <div class="reviews-grid">
+        <div class="review-card">
+          <div class="review-stars">⭐⭐⭐⭐⭐</div>
+          <div class="review-text">"Bamania's Cine AI completely transformed my content workflow. I went from spending 8 hours per video to just 10 minutes. The Hindi voice quality is incredible!"</div>
+          <div class="review-author">
+            <div class="review-avatar" style="background:linear-gradient(135deg,#7c3aed,#ec4899)">R</div>
+            <div><div class="review-name">Rahul Sharma</div><div class="review-role">YouTube Creator · 2.3M subscribers</div></div>
+            <div class="review-metric">+340% views</div>
+          </div>
+        </div>
+        <div class="review-card">
+          <div class="review-stars">⭐⭐⭐⭐⭐</div>
+          <div class="review-text">"The auto-publishing feature is a game changer. My Instagram Reels now go out automatically every day. Revenue jumped from ₹15K to ₹85K per month!"</div>
+          <div class="review-author">
+            <div class="review-avatar" style="background:linear-gradient(135deg,#f59e0b,#ef4444)">P</div>
+            <div><div class="review-name">Priya Patel</div><div class="review-role">Instagram Creator · 890K followers</div></div>
+            <div class="review-metric">₹85K/month</div>
+          </div>
+        </div>
+        <div class="review-card">
+          <div class="review-stars">⭐⭐⭐⭐⭐</div>
+          <div class="review-text">"The cinematic quality blew my mind. At just ₹6 per video it's 100x cheaper than hiring an editor. My agency now produces 50+ videos a day!"</div>
+          <div class="review-author">
+            <div class="review-avatar" style="background:linear-gradient(135deg,#22c55e,#3b82f6)">A</div>
+            <div><div class="review-name">Arjun Singh</div><div class="review-role">Digital Agency Owner</div></div>
+            <div class="review-metric">50+ videos/day</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════ STUDIO PAGE ══════════ -->
+    <div class="page" id="page-studio">
+      <div class="studio-hero">
+        <div class="hero-blob1"></div>
+        <div class="hero-badge"><span class="pulse-dot"></span>⚡ AI-Powered Studio</div>
+        <div class="hero-title" style="font-size:26px">Cinematic Studio</div>
+        <div class="hero-sub">Generate, edit, and publish your cinematic videos</div>
+        <div class="hero-stats" style="margin-top:16px">
+          <div class="hero-stat"><div class="hero-stat-val">127</div><div class="hero-stat-label">Videos</div></div>
+          <div class="hero-stat"><div class="hero-stat-val">1</div><div class="hero-stat-label">Scheduled</div></div>
+          <div class="hero-stat"><div class="hero-stat-val">24</div><div class="hero-stat-label">Thumbnails</div></div>
+          <div class="hero-stat"><div class="hero-stat-val">₹6</div><div class="hero-stat-label">Cost/Video</div></div>
+        </div>
+      </div>
+      <div class="studio-cards">
+        <!-- NEW VIDEO -->
+        <div class="studio-card expanded">
+          <div class="studio-card-icon" style="background:linear-gradient(135deg,rgba(124,58,237,.2),rgba(162,28,175,.2))">🎬</div>
+          <div class="studio-card-title">New Video</div>
+          <div class="studio-card-sub">Generate a new cinematic video</div>
+          <div class="studio-card-content">
+            <input type="text" id="studioTopic" class="config-input" placeholder="Enter video topic…" style="margin-bottom:10px"/>
+            <div style="display:flex;gap:6px;margin-bottom:10px">
+              <div class="gen-opt active" style="flex:1;text-align:center" onclick="selectOpt(this,'slen')">Short</div>
+              <div class="gen-opt" style="flex:1;text-align:center" onclick="selectOpt(this,'slen')">Long</div>
+            </div>
+            <div style="display:flex;gap:6px;margin-bottom:10px">
+              <div class="gen-opt active" style="flex:1;text-align:center" onclick="selectOpt(this,'sres')">HD</div>
+              <div class="gen-opt" style="flex:1;text-align:center" onclick="selectOpt(this,'sres')">2K</div>
+              <div class="gen-opt" style="flex:1;text-align:center" onclick="selectOpt(this,'sres')">4K</div>
+            </div>
+            <button class="gen-generate-btn" onclick="startGeneration()" style="width:100%">⚡ Generate Video</button>
+          </div>
+        </div>
+        <!-- VOICE -->
+        <div class="studio-card expanded">
+          <div class="studio-card-icon" style="background:linear-gradient(135deg,rgba(34,197,94,.15),rgba(6,182,212,.15))">🎙️</div>
+          <div class="studio-card-title">Hindi Voice Settings</div>
+          <div class="studio-card-sub">Configure voice for your cinematic videos</div>
+          <div class="studio-card-content">
+            <div class="voice-gender-grid">
+              <div class="voice-gender-card active" onclick="selectGender(this,'male')">
+                <div class="voice-gender-icon">👨</div>
+                <div class="voice-gender-name">Male</div>
+                <div class="voice-names">Madhur · Prabhat</div>
+              </div>
+              <div class="voice-gender-card" onclick="selectGender(this,'female')">
+                <div class="voice-gender-icon">👩</div>
+                <div class="voice-gender-name">Female</div>
+                <div class="voice-names">Swara · Kalpana</div>
+              </div>
+            </div>
+            <div class="voice-cards" id="voiceCards">
+              <div class="voice-card active" onclick="selectVoice(this)">Madhur<div style="font-size:9px;color:#6b7280">News</div></div>
+              <div class="voice-card" onclick="selectVoice(this)">Prabhat<div style="font-size:9px;color:#6b7280">Story</div></div>
+              <div class="voice-card" onclick="selectVoice(this)">Hemant<div style="font-size:9px;color:#6b7280">Youth</div></div>
+            </div>
+            <div class="slider-group">
+              <div class="slider-label"><span>🎚 Speed</span><span id="speedVal">1.0x</span></div>
+              <input type="range" min="50" max="200" value="100" oninput="document.getElementById('speedVal').textContent=(this.value/100).toFixed(1)+'x'"/>
+            </div>
+            <div class="slider-group">
+              <div class="slider-label"><span>🎵 Pitch</span><span id="pitchVal">0</span></div>
+              <input type="range" min="-10" max="10" value="0" oninput="document.getElementById('pitchVal').textContent=this.value"/>
+            </div>
+            <div class="slider-group">
+              <div class="slider-label"><span>🔊 Volume</span><span id="volVal">80%</span></div>
+              <input type="range" min="0" max="100" value="80" oninput="document.getElementById('volVal').textContent=this.value+'%'"/>
+            </div>
+            <button class="test-voice-btn" onclick="testVoice(this)">
+              <span>🎙️</span><span id="testVoiceLbl">Test Hindi Voice</span>
+              <div class="waveform" id="waveform" style="display:none">
+                <div class="wave-bar" style="height:6px"></div>
+                <div class="wave-bar"></div>
+                <div class="wave-bar"></div>
+                <div class="wave-bar"></div>
+                <div class="wave-bar"></div>
+              </div>
+            </button>
+          </div>
+        </div>
+        <!-- THUMBNAILS -->
+        <div class="studio-card" onclick="navigate('thumbnail',document.querySelector('[onclick*=thumbnail]'))">
+          <div class="studio-card-icon" style="background:linear-gradient(135deg,rgba(251,191,36,.15),rgba(239,68,68,.15))">🖼️</div>
+          <div class="studio-card-title">Thumbnails</div>
+          <div class="studio-card-sub">Create viral AI thumbnails automatically</div>
+          <button class="gen-generate-btn" style="width:100%;margin-top:8px" onclick="event.stopPropagation();navigate('thumbnail',null)">Open Generator</button>
+        </div>
+        <!-- SCHEDULE -->
+        <div class="studio-card" onclick="openScheduleModal()">
+          <div class="studio-card-icon" style="background:linear-gradient(135deg,rgba(59,130,246,.15),rgba(124,58,237,.15))">📅</div>
+          <div class="studio-card-title">Schedule</div>
+          <div class="studio-card-sub">Schedule your posts for optimal reach</div>
+          <button class="gen-schedule-btn" style="width:100%;margin-top:8px" onclick="event.stopPropagation();openScheduleModal()">Schedule Post</button>
+        </div>
+        <!-- STYLES -->
+        <div class="studio-card expanded">
+          <div class="studio-card-icon" style="background:linear-gradient(135deg,rgba(236,72,153,.15),rgba(239,68,68,.15))">🎨</div>
+          <div class="studio-card-title">Cinematic Styles</div>
+          <div class="studio-card-sub">Choose your visual style</div>
+          <div class="studio-card-content">
+            <div class="style-grid">
+              <div class="style-card active" onclick="selectOpt(this,'style')"><div class="style-card-icon">🎬</div><div class="style-card-name">Cinematic</div></div>
+              <div class="style-card" onclick="selectOpt(this,'style')"><div class="style-card-icon">🔥</div><div class="style-card-name">Viral</div></div>
+              <div class="style-card" onclick="selectOpt(this,'style')"><div class="style-card-icon">🎨</div><div class="style-card-name">Minimal</div></div>
+              <div class="style-card" onclick="selectOpt(this,'style')"><div class="style-card-icon">👤</div><div class="style-card-name">Portrait</div></div>
+            </div>
+          </div>
+        </div>
+        <!-- PUBLISH -->
+        <div class="studio-card expanded">
+          <div class="studio-card-icon" style="background:linear-gradient(135deg,rgba(239,68,68,.15),rgba(251,191,36,.15))">🚀</div>
+          <div class="studio-card-title">Auto Publish</div>
+          <div class="studio-card-sub">Publish to social media automatically</div>
+          <div class="studio-card-content">
+            <div class="toggle-row">
+              <div><div class="toggle-label">▶️ YouTube Shorts</div></div>
+              <div class="toggle-switch on" onclick="toggleSwitch(this)"><div class="toggle-thumb"></div></div>
+            </div>
+            <div class="toggle-row">
+              <div><div class="toggle-label">📸 Instagram Reels</div></div>
+              <div class="toggle-switch on" onclick="toggleSwitch(this)"><div class="toggle-thumb"></div></div>
+            </div>
+            <div class="toggle-row">
+              <div><div class="toggle-label">📘 Facebook</div></div>
+              <div class="toggle-switch" onclick="toggleSwitch(this)"><div class="toggle-thumb"></div></div>
+            </div>
+            <button class="gen-generate-btn" style="width:100%;margin-top:10px" onclick="showToast('Publishing settings saved!','success')">Save Settings</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════ THUMBNAIL PAGE ══════════ -->
+    <div class="page" id="page-thumbnail">
+      <div style="padding:20px 20px 12px">
+        <div class="section-eyebrow">AI GENERATOR</div>
+        <div style="font-size:22px;font-weight:800;margin-bottom:4px">Thumbnail Generator</div>
+        <div style="font-size:13px;color:#6b7280">Auto-generated thumbnails from your video content</div>
+      </div>
+      <div class="thumb-layout">
+        <div class="thumb-preview-card">
+          <div class="thumb-canvas-wrap">
+            <canvas id="thumbCanvas" width="1280" height="720"></canvas>
+          </div>
+          <div style="padding:12px 14px;border-top:1px solid rgba(255,255,255,.07)">
+            <div style="font-size:13px;font-weight:700" id="thumbTitle">Morning Routine Secrets</div>
+            <div style="font-size:11px;color:#6b7280;margin-top:2px">1280 × 720 · HD · PNG</div>
+          </div>
+          <div class="thumb-actions">
+            <button class="thumb-action-btn primary" onclick="downloadThumbnail()">⬇️ Download PNG</button>
+            <button class="thumb-action-btn secondary" onclick="generateThumbnail()">🔄 Regenerate</button>
+            <button class="thumb-action-btn secondary" onclick="showToast('Added to project!','success')">📁 Add to Project</button>
+          </div>
+        </div>
+        <div class="thumb-controls-card">
+          <div>
+            <div style="font-size:11px;font-weight:600;color:#9ca3af;margin-bottom:8px">STYLE</div>
+            <div class="style-grid">
+              <div class="style-card active" onclick="selectStyle(this,'cinematic');generateThumbnail()"><div class="style-card-icon">🎬</div><div class="style-card-name">Cinematic</div></div>
+              <div class="style-card" onclick="selectStyle(this,'viral');generateThumbnail()"><div class="style-card-icon">🔥</div><div class="style-card-name">Viral</div></div>
+              <div class="style-card" onclick="selectStyle(this,'minimal');generateThumbnail()"><div class="style-card-icon">🎨</div><div class="style-card-name">Minimal</div></div>
+              <div class="style-card" onclick="selectStyle(this,'portrait');generateThumbnail()"><div class="style-card-icon">👤</div><div class="style-card-name">Portrait</div></div>
+            </div>
+          </div>
+          <div>
+            <div style="font-size:11px;font-weight:600;color:#9ca3af;margin-bottom:8px">COLOR SCHEME</div>
+            <div class="color-grid">
+              <div class="color-swatch active" style="background:linear-gradient(135deg,#7c3aed,#a21caf)" onclick="selectColor(this,'#7c3aed');generateThumbnail()"></div>
+              <div class="color-swatch" style="background:linear-gradient(135deg,#ef4444,#dc2626)" onclick="selectColor(this,'#ef4444');generateThumbnail()"></div>
+              <div class="color-swatch" style="background:linear-gradient(135deg,#3b82f6,#1d4ed8)" onclick="selectColor(this,'#3b82f6');generateThumbnail()"></div>
+              <div class="color-swatch" style="background:linear-gradient(135deg,#f59e0b,#d97706)" onclick="selectColor(this,'#f59e0b');generateThumbnail()"></div>
+              <div class="color-swatch" style="background:linear-gradient(135deg,#22c55e,#16a34a)" onclick="selectColor(this,'#22c55e');generateThumbnail()"></div>
+              <div class="color-swatch" style="background:linear-gradient(135deg,#111827,#374151)" onclick="selectColor(this,'#111827');generateThumbnail()"></div>
+            </div>
+          </div>
+          <div>
+            <div style="font-size:11px;font-weight:600;color:#9ca3af;margin-bottom:8px">VIDEO TITLE</div>
+            <input type="text" class="config-input" value="Morning Routine Secrets of High Performers" oninput="document.getElementById('thumbTitle').textContent=this.value;generateThumbnail()" style="margin-bottom:0"/>
+          </div>
+          <div>
+            <div style="font-size:11px;font-weight:600;color:#9ca3af;margin-bottom:8px">RESOLUTION</div>
+            <div style="display:flex;gap:6px">
+              <div class="gen-opt active" onclick="selectOpt(this,'tres')" style="flex:1;text-align:center">HD<div class="gen-opt-hint">1280×720</div></div>
+              <div class="gen-opt" onclick="selectOpt(this,'tres')" style="flex:1;text-align:center">2K<div class="gen-opt-hint">2560×1440</div></div>
+              <div class="gen-opt" onclick="selectOpt(this,'tres')" style="flex:1;text-align:center">4K<div class="gen-opt-hint">3840×2160</div></div>
+            </div>
+          </div>
+          <button class="gen-generate-btn" onclick="generateThumbnail()" style="width:100%">🖼️ Generate Thumbnail</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════ ANALYTICS PAGE ══════════ -->
+    <div class="page" id="page-analytics">
+      <div style="padding:20px 20px 12px">
+        <div class="section-eyebrow">INSIGHTS</div>
+        <div style="font-size:22px;font-weight:800;margin-bottom:4px">Analytics Dashboard</div>
+        <div style="font-size:13px;color:#6b7280">Track your content performance across platforms</div>
+      </div>
+      <div class="analytics-stats">
+        <div class="analytics-card">
+          <div class="analytics-card-val" style="color:#a78bfa">127</div>
+          <div class="analytics-card-label">Videos Generated</div>
+          <div class="analytics-card-trend up">↑ 23% this week</div>
+        </div>
+        <div class="analytics-card">
+          <div class="analytics-card-val" style="color:#4ade80">2.4M</div>
+          <div class="analytics-card-label">Total Views</div>
+          <div class="analytics-card-trend up">↑ 41% this month</div>
+        </div>
+        <div class="analytics-card">
+          <div class="analytics-card-val" style="color:#fbbf24">8.7%</div>
+          <div class="analytics-card-label">Avg Engagement</div>
+          <div class="analytics-card-trend up">↑ 12% vs last month</div>
+        </div>
+        <div class="analytics-card">
+          <div class="analytics-card-val" style="color:#f472b6">₹6</div>
+          <div class="analytics-card-label">Cost per Video</div>
+          <div class="analytics-card-trend up">↓ 90% vs manual</div>
+        </div>
+      </div>
+      <div class="chart-wrap">
+        <div style="font-size:14px;font-weight:700;margin-bottom:4px">Videos Generated — Last 7 Days</div>
+        <div style="font-size:12px;color:#6b7280">Daily production output</div>
+        <div class="chart-bars" id="chartBars"></div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;padding:0 20px 20px">
+        <div class="analytics-card" style="text-align:center">
+          <div style="font-size:22px;margin-bottom:6px">▶️</div>
+          <div class="analytics-card-val" style="font-size:18px;color:#ef4444">58%</div>
+          <div class="analytics-card-label">YouTube</div>
+          <div style="font-size:11px;color:#6b7280">1.39M views</div>
+        </div>
+        <div class="analytics-card" style="text-align:center">
+          <div style="font-size:22px;margin-bottom:6px">📸</div>
+          <div class="analytics-card-val" style="font-size:18px;color:#f472b6">29%</div>
+          <div class="analytics-card-label">Instagram</div>
+          <div style="font-size:11px;color:#6b7280">696K plays</div>
+        </div>
+        <div class="analytics-card" style="text-align:center">
+          <div style="font-size:22px;margin-bottom:6px">📘</div>
+          <div class="analytics-card-val" style="font-size:18px;color:#3b82f6">13%</div>
+          <div class="analytics-card-label">Facebook</div>
+          <div style="font-size:11px;color:#6b7280">312K views</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════ SETTINGS PAGE ══════════ -->
+    <div class="page" id="page-settings">
+      <div style="padding:20px 20px 0">
+        <div class="section-eyebrow">CONFIGURATION</div>
+        <div style="font-size:22px;font-weight:800;margin-bottom:4px">Settings</div>
+        <div style="font-size:13px;color:#6b7280">Configure publishing, API keys, and platform connections</div>
+      </div>
+      <div class="settings-tabs">
+        <div class="settings-tab active" onclick="switchSettingsTab('auto',this)">🚀 Auto Publish</div>
+        <div class="settings-tab" onclick="switchSettingsTab('youtube',this)">▶️ YouTube</div>
+        <div class="settings-tab" onclick="switchSettingsTab('instagram',this)">📸 Instagram</div>
+        <div class="settings-tab" onclick="switchSettingsTab('facebook',this)">📘 Facebook</div>
+        <div class="settings-tab" onclick="switchSettingsTab('general',this)">⚙️ General</div>
+      </div>
+      <div class="settings-body active" id="stab-auto">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:10px">
+          <div><div style="font-size:15px;font-weight:700">Auto Publishing</div><div style="font-size:12px;color:#6b7280">Enable automatic publishing after generation</div></div>
+          <div class="toggle-switch on" onclick="toggleSwitch(this)"><div class="toggle-thumb"></div></div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px">
+          <div class="platform-config-card">
+            <div class="platform-config-header"><div class="platform-config-title"><span>▶️</span>YouTube Shorts</div><div style="display:flex;align-items:center;gap:6px"><div class="status-dot"></div><span style="font-size:11px;color:#4ade80">Connected</span></div></div>
+            <div style="font-size:11px;color:#9ca3af;margin-bottom:6px">Publish Time</div>
+            <input type="time" class="config-input" value="18:00"/>
+            <div style="font-size:11px;color:#9ca3af;margin:8px 0 6px">Publish Days</div>
+            <div class="days-grid">
+              <div class="day-btn active">M</div><div class="day-btn active">T</div>
+              <div class="day-btn active">W</div><div class="day-btn active">T</div>
+              <div class="day-btn active">F</div><div class="day-btn">S</div><div class="day-btn">S</div>
+            </div>
+          </div>
+          <div class="platform-config-card">
+            <div class="platform-config-header"><div class="platform-config-title"><span>📸</span>Instagram Reels</div><div style="display:flex;align-items:center;gap:6px"><div class="status-dot"></div><span style="font-size:11px;color:#4ade80">Connected</span></div></div>
+            <div style="font-size:11px;color:#9ca3af;margin-bottom:6px">Publish Time</div>
+            <input type="time" class="config-input" value="19:30"/>
+            <div style="font-size:11px;color:#9ca3af;margin:8px 0 6px">Publish Days</div>
+            <div class="days-grid">
+              <div class="day-btn">M</div><div class="day-btn active">T</div>
+              <div class="day-btn">W</div><div class="day-btn active">T</div>
+              <div class="day-btn">F</div><div class="day-btn active">S</div><div class="day-btn">S</div>
+            </div>
+          </div>
+          <div class="platform-config-card">
+            <div class="platform-config-header"><div class="platform-config-title"><span>📘</span>Facebook</div><div style="display:flex;align-items:center;gap:6px"><div class="status-dot" style="background:#ef4444"></div><span style="font-size:11px;color:#f87171">Not Connected</span></div></div>
+            <div style="font-size:11px;color:#9ca3af;margin-bottom:6px">Publish Time</div>
+            <input type="time" class="config-input" value="20:00"/>
+            <button class="connect-btn" style="margin-top:8px" onclick="showToast('Connecting Facebook…','info')">Connect Facebook</button>
+          </div>
+        </div>
+        <div style="margin-top:16px">
+          <button class="gen-generate-btn" style="width:auto;padding:10px 24px" onclick="showToast('Auto publish settings saved!','success')">💾 Save Settings</button>
+        </div>
+      </div>
+      <div class="settings-body" id="stab-youtube">
+        <div class="platform-config-card">
+          <div class="platform-config-header"><div class="platform-config-title"><span>▶️</span>YouTube Configuration</div><div style="display:flex;align-items:center;gap:6px"><div class="status-dot"></div><span style="font-size:11px;color:#4ade80">Connected</span></div></div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+            <div><label style="font-size:11px;color:#9ca3af;display:block;margin-bottom:4px">API Key</label><input class="config-input" type="password" placeholder="AIza…" style="margin-bottom:0"/></div>
+            <div><label style="font-size:11px;color:#9ca3af;display:block;margin-bottom:4px">Channel ID</label><input class="config-input" placeholder="UC…" style="margin-bottom:0"/></div>
+            <div><label style="font-size:11px;color:#9ca3af;display:block;margin-bottom:4px">Client ID</label><input class="config-input" placeholder="OAuth Client ID" style="margin-bottom:0"/></div>
+            <div><label style="font-size:11px;color:#9ca3af;display:block;margin-bottom:4px">Client Secret</label><input class="config-input" type="password" placeholder="OAuth Secret" style="margin-bottom:0"/></div>
+          </div>
+          <div style="margin-top:10px;display:flex;gap:8px">
+            <button class="connect-btn" style="flex:1" onclick="showToast('YouTube connected!','success')">Connect YouTube</button>
+            <button class="connect-btn" style="flex:1;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1)" onclick="showToast('Disconnected','info')">Disconnect</button>
+          </div>
+        </div>
+      </div>
+      <div class="settings-body" id="stab-instagram">
+        <div class="platform-config-card">
+          <div class="platform-config-header"><div class="platform-config-title"><span>📸</span>Instagram Configuration</div><div style="display:flex;align-items:center;gap:6px"><div class="status-dot"></div><span style="font-size:11px;color:#4ade80">Connected</span></div></div>
+          <div><label style="font-size:11px;color:#9ca3af;display:block;margin-bottom:4px">Access Token</label><input class="config-input" type="password" placeholder="Instagram Access Token"/></div>
+          <div><label style="font-size:11px;color:#9ca3af;display:block;margin-bottom:4px">Business Account ID</label><input class="config-input" placeholder="Business Account ID" style="margin-bottom:0"/></div>
+          <button class="connect-btn" style="margin-top:10px" onclick="showToast('Instagram connected!','success')">Connect Instagram</button>
+        </div>
+      </div>
+      <div class="settings-body" id="stab-facebook">
+        <div class="platform-config-card">
+          <div class="platform-config-header"><div class="platform-config-title"><span>📘</span>Facebook Configuration</div><div style="display:flex;align-items:center;gap:6px"><div class="status-dot" style="background:#ef4444"></div><span style="font-size:11px;color:#f87171">Not Connected</span></div></div>
+          <div><label style="font-size:11px;color:#9ca3af;display:block;margin-bottom:4px">Page Access Token</label><input class="config-input" type="password" placeholder="Facebook Page Token"/></div>
+          <div><label style="font-size:11px;color:#9ca3af;display:block;margin-bottom:4px">Page ID</label><input class="config-input" placeholder="Facebook Page ID" style="margin-bottom:0"/></div>
+          <button class="connect-btn" style="margin-top:10px" onclick="showToast('Facebook connected!','success')">Connect Facebook</button>
+        </div>
+      </div>
+      <div class="settings-body" id="stab-general">
+        <div class="platform-config-card">
+          <div style="font-size:14px;font-weight:700;margin-bottom:14px">General Settings</div>
+          <div class="toggle-row"><div><div class="toggle-label">Auto-publish after generation</div><div class="toggle-sub">Publish immediately when video is ready</div></div><div class="toggle-switch on" onclick="toggleSwitch(this)"><div class="toggle-thumb"></div></div></div>
+          <div class="toggle-row"><div><div class="toggle-label">Smart scheduling</div><div class="toggle-sub">Auto-pick best posting times</div></div><div class="toggle-switch on" onclick="toggleSwitch(this)"><div class="toggle-thumb"></div></div></div>
+          <div class="toggle-row"><div><div class="toggle-label">Email notifications</div><div class="toggle-sub">Get notified when video is ready</div></div><div class="toggle-switch" onclick="toggleSwitch(this)"><div class="toggle-thumb"></div></div></div>
+          <div style="margin-top:14px"><label style="font-size:11px;color:#9ca3af;display:block;margin-bottom:4px">Default Tags</label><input class="config-input" value="#HindiContent #CineAI #ViralVideo" style="margin-bottom:10px"/></div>
+          <button class="connect-btn" onclick="showToast('General settings saved!','success')">💾 Save General Settings</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════ WHAT'S NEW PAGE ══════════ -->
+    <div class="page" id="page-whats-new">
+      <div class="whats-new-hero">
+        <div class="hero-blob1"></div>
+        <div class="hero-badge"><span class="pulse-dot"></span>🚀 v2.0 — Latest Release</div>
+        <div class="hero-title" style="font-size:26px">Bamania's Cine AI v2.0</div>
+        <div class="hero-sub">The World's Most Advanced Hindi Cinematic AI Studio</div>
+        <div class="hero-stats" style="margin-top:16px">
+          <div class="hero-stat"><div class="hero-stat-val">10K+</div><div class="hero-stat-label">Videos Generated</div></div>
+          <div class="hero-stat"><div class="hero-stat-val">99%</div><div class="hero-stat-label">Success Rate</div></div>
+          <div class="hero-stat"><div class="hero-stat-val">4K</div><div class="hero-stat-label">Max Quality</div></div>
+          <div class="hero-stat"><div class="hero-stat-val">₹6</div><div class="hero-stat-label">Cost / Video</div></div>
+        </div>
+      </div>
+      <div style="padding:0 20px;margin-bottom:20px">
+        <div class="section-eyebrow">PRICING PLANS</div>
+        <div style="font-size:20px;font-weight:800;margin-bottom:4px">Choose Your Plan</div>
+        <div style="font-size:13px;color:#6b7280;margin-bottom:20px">Pay in INR · UPI · Cards · Net Banking</div>
+      </div>
+      <div class="pricing-grid">
+        <div class="pricing-card">
+          <div class="pricing-plan">STARTER</div>
+          <div class="pricing-price">₹999<span>/month</span></div>
+          <div class="pricing-videos">50 videos/month</div>
+          <div class="pricing-features">
+            <div class="pricing-feature"><span class="check">✓</span>HD Quality (1080p)</div>
+            <div class="pricing-feature"><span class="check">✓</span>Hindi Voice (2 voices)</div>
+            <div class="pricing-feature"><span class="check">✓</span>Basic thumbnails</div>
+            <div class="pricing-feature"><span class="check">✓</span>YouTube publishing</div>
+            <div class="pricing-feature"><span style="color:#6b7280">✕</span>4K quality</div>
+            <div class="pricing-feature"><span style="color:#6b7280">✕</span>Instagram/Facebook</div>
+          </div>
+          <button class="pricing-btn" onclick="showToast('Starter plan selected!','success')">Get Started</button>
+        </div>
+        <div class="pricing-card popular">
+          <div class="popular-badge">⭐ Most Popular</div>
+          <div class="pricing-plan">PRO</div>
+          <div class="pricing-price">₹2,999<span>/month</span></div>
+          <div class="pricing-videos">500 videos/month</div>
+          <div class="pricing-features">
+            <div class="pricing-feature"><span class="check">✓</span>4K Quality</div>
+            <div class="pricing-feature"><span class="check">✓</span>All Hindi voices</div>
+            <div class="pricing-feature"><span class="check">✓</span>AI Thumbnails</div>
+            <div class="pricing-feature"><span class="check">✓</span>All platforms</div>
+            <div class="pricing-feature"><span class="check">✓</span>Auto scheduling</div>
+            <div class="pricing-feature"><span class="check">✓</span>Analytics dashboard</div>
+          </div>
+          <button class="pricing-btn" onclick="showToast('Pro plan selected!','success')">Upgrade to Pro</button>
+        </div>
+        <div class="pricing-card">
+          <div class="pricing-plan">AGENCY</div>
+          <div class="pricing-price">₹7,999<span>/month</span></div>
+          <div class="pricing-videos">Unlimited videos</div>
+          <div class="pricing-features">
+            <div class="pricing-feature"><span class="check">✓</span>Everything in Pro</div>
+            <div class="pricing-feature"><span class="check">✓</span>White-label</div>
+            <div class="pricing-feature"><span class="check">✓</span>API access</div>
+            <div class="pricing-feature"><span class="check">✓</span>Team accounts</div>
+            <div class="pricing-feature"><span class="check">✓</span>Priority support</div>
+            <div class="pricing-feature"><span class="check">✓</span>Custom branding</div>
+          </div>
+          <button class="pricing-btn" onclick="showToast('Agency plan selected!','success')">Contact Sales</button>
+        </div>
+      </div>
+      <div style="padding:0 20px 20px">
+        <div class="section-eyebrow">ABOUT</div>
+        <div style="font-size:20px;font-weight:800;margin-bottom:16px">About Dr. Narayan Bamania</div>
+        <div class="analytics-card" style="display:flex;align-items:flex-start;gap:16px;flex-wrap:wrap">
+          <div style="width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,#7c3aed,#ec4899);display:flex;align-items:center;justify-content:center;font-size:28px;flex-shrink:0">👨‍💻</div>
+          <div style="flex:1;min-width:200px">
+            <div style="font-size:16px;font-weight:800;margin-bottom:4px">Dr. Narayan Bamania</div>
+            <div style="font-size:12px;color:#a78bfa;margin-bottom:8px">Full Stack AI Engineer & Content Automation Expert</div>
+            <div style="font-size:13px;color:#9ca3af;line-height:1.6;margin-bottom:12px">10+ years of experience building AI-powered content systems. Creator of Bamania's Cine AI — the world's most advanced Hindi cinematic video generation platform.</div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap">
+              <button class="save-btn" onclick="showToast('Opening GitHub…','info')">GitHub</button>
+              <button class="save-btn" onclick="showToast('Opening portfolio…','info')">Portfolio</button>
+              <button class="save-btn" onclick="showToast('Opening Twitter…','info')">Twitter/X</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- end .main -->
+</div><!-- end .app-shell -->
+
+<!-- VIDEO PLAYER MODAL -->
+<div class="modal-overlay" id="videoModal">
+  <div class="video-modal">
+    <div class="video-modal-header">
+      <div class="video-modal-title" id="videoModalTitle">Video Player</div>
+      <button class="close-btn" onclick="closeVideoModal()">✕</button>
+    </div>
+    <div class="video-player-area">
+      <div class="video-placeholder">
+        <button class="video-play-btn" id="mainPlayBtn" onclick="togglePlay()">▶</button>
+        <div style="font-size:12px;color:#6b7280" id="videoStatusText">Click to play</div>
+      </div>
+    </div>
+    <div class="video-controls">
+      <div class="video-progress" onclick="seekVideo(event)">
+        <div class="video-progress-fill" id="videoProgress"></div>
+      </div>
+      <div class="video-ctrl-row">
+        <div class="ctrl-left">
+          <button class="ctrl-btn" onclick="togglePlay()" id="playPauseBtn">▶️</button>
+          <button class="ctrl-btn" onclick="toggleMute()">🔊</button>
+          <input type="range" class="volume-slider" min="0" max="100" value="80"/>
+          <span class="time-display" id="timeDisplay">0:00 / 2:45</span>
+        </div>
+        <div class="ctrl-right">
+          <button class="ctrl-btn" onclick="showToast('Fullscreen activated','info')">⛶</button>
+        </div>
+      </div>
+    </div>
+    <div class="video-modal-footer">
+      <button class="modal-action-btn primary" onclick="downloadFromModal()">⬇️ Download MP4</button>
+      <button class="modal-action-btn secondary" onclick="shareFromModal()">📤 Share</button>
+      <button class="modal-action-btn secondary" onclick="closeVideoModal()">✕ Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- DELETE MODAL -->
+<div class="modal-overlay" id="deleteModal">
+  <div class="delete-modal">
+    <div class="delete-modal-icon">🗑️</div>
+    <div class="delete-modal-title">Delete Project?</div>
+    <div class="delete-modal-sub" id="deleteModalSub">This will permanently delete the project and cannot be undone.</div>
+    <div class="delete-modal-actions">
+      <button class="delete-cancel" onclick="closeDeleteModal()">Cancel</button>
+      <button class="delete-confirm" onclick="confirmDelete()">Delete</button>
+    </div>
+  </div>
+</div>
+
+<!-- SCHEDULE MODAL -->
+<div class="modal-overlay" id="scheduleModal">
+  <div class="schedule-modal">
+    <div class="schedule-modal-header">
+      <div style="font-size:14px;font-weight:700">📅 Schedule Post</div>
+      <button class="close-btn" onclick="closeScheduleModal()">✕</button>
+    </div>
+    <div class="schedule-body">
+      <div class="schedule-topic-chip">
+        📝 Topic: <span id="scheduleTopicText">Morning Routine Secrets of High Performers</span>
+      </div>
+      <div class="schedule-dt-grid">
+        <div class="schedule-input-group">
+          <label>📅 Date</label>
+          <input type="date" class="schedule-input" id="scheduleDate"/>
+        </div>
+        <div class="schedule-input-group">
+          <label>⏰ Time</label>
+          <input type="time" class="schedule-input" id="scheduleTime" value="18:00"/>
+        </div>
+      </div>
+      <div>
+        <div style="font-size:11px;font-weight:600;color:#9ca3af;margin-bottom:8px">PLATFORMS</div>
+        <div class="schedule-platforms">
+          <div class="platform-chip active" onclick="this.classList.toggle('active')">▶️ YouTube Shorts</div>
+          <div class="platform-chip active" onclick="this.classList.toggle('active')">📸 Instagram Reels</div>
+          <div class="platform-chip" onclick="this.classList.toggle('active')">📘 Facebook</div>
+        </div>
+      </div>
+      <div class="schedule-preview" id="schedulePreview">
+        📅 Will publish on — select date and time
+      </div>
+      <div class="schedule-actions">
+        <button class="schedule-cancel" onclick="closeScheduleModal()">Cancel</button>
+        <button class="schedule-confirm" onclick="confirmSchedule()">✅ Confirm Schedule</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast">
+  <span id="toastIcon">✅</span>
+  <span id="toastMsg">Action completed</span>
+</div>
+
+<script>
+// ─── STATE ───────────────────────────────────────────
+let projects = JSON.parse(localStorage.getItem('bcai_projects') || 'null') || [
+  {id:1,title:'The Rise of AI Revolution 2025',emoji:'🤖',status:'Ready',duration:'2:45',style:'Cinematic',res:'4K',views:'847K',likes:'52K',comments:'3.4K',date:'Jan 15, 2025 · 10:30 AM',day:'Wed',bg:'linear-gradient(135deg,#1a1a2e,#16213e,#0f3460)'},
+  {id:2,title:'Quantum Computing Breakthrough',emoji:'⚛️',status:'Ready',duration:'3:12',style:'Documentary',res:'4K',views:'623K',likes:'41K',comments:'2.8K',date:'Jan 15, 2025 · 07:15 AM',day:'Wed',bg:'linear-gradient(135deg,#0d0d0d,#1a1a2e,#2d1b69)'},
+  {id:3,title:'Future of Space Exploration',emoji:'🚀',status:'Generating',duration:'2:58',style:'Cinematic',res:'4K',views:'0K',likes:'0K',comments:'0.0K',date:'Jan 15, 2025 · 02:20 PM',day:'Wed',bg:'linear-gradient(135deg,#0a0a1a,#1a0a2e,#2e1065)'},
+  {id:4,title:'Hindi Motivation for Success',emoji:'💪',status:'Scheduled',duration:'1:45',style:'Viral',res:'HD',views:'0K',likes:'0K',comments:'0.0K',date:'Jan 16, 2025 · 06:00 PM',day:'Thu',bg:'linear-gradient(135deg,#1a0a0a,#2e1010,#450a0a)',scheduledFor:'Jan 16, 2025 · 06:00 PM'}
+];
+let deleteTargetId = null;
+let isPlaying = false;
+let progressInterval = null;
+let currentVideoTitle = '';
+let selectedColor = '#7c3aed';
+let currentThumbStyle = 'cinematic';
+let countdownSeconds = 300;
+let countdownTimer = null;
+
+// ─── NAVIGATION ──────────────────────────────────────
+function navigate(page, el) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  const target = document.getElementById('page-' + page);
+  if (target) target.classList.add('active');
+  if (el) el.classList.add('active');
+  else {
+    document.querySelectorAll('.nav-item').forEach(n => {
+      if (n.textContent.toLowerCase().includes(page)) n.classList.add('active');
+    });
+  }
+  closeSidebar();
+  if (page === 'analytics') renderChart();
+  if (page === 'thumbnail') generateThumbnail();
+}
+
+// ─── SIDEBAR ─────────────────────────────────────────
+function openSidebar() {
+  document.getElementById('sidebar').classList.add('open');
+  document.getElementById('sidebarOverlay').classList.add('show');
+}
+function closeSidebar() {
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('sidebarOverlay').classList.remove('show');
+}
+
+// ─── PROJECTS ────────────────────────────────────────
+function renderProjects(list) {
+  const grid = document.getElementById('projectsGrid');
+  if (!list || list.length === 0) {
+    grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:40px;color:#6b7280">
+      <div style="font-size:40px;margin-bottom:12px">📁</div>
+      <div style="font-size:16px;font-weight:700;margin-bottom:6px">No projects yet</div>
+      <div style="font-size:13px">Generate your first cinematic video above</div>
+    </div>`;
+    return;
+  }
+  grid.innerHTML = list.map(p => `
+    <div class="project-card" id="card-${p.id}" onclick="selectProject(${p.id})">
+      <div class="card-thumb">
+        <div class="card-thumb-bg" style="background:${p.bg}">${p.emoji}</div>
+        <div class="card-thumb-overlay"></div>
+        <div class="card-status ${p.status.toLowerCase()}">${p.status}</div>
+        <div class="card-res">${p.res}</div>
+        <div class="card-duration">${p.duration}</div>
+        <div class="card-style">${p.style}</div>
+        <div class="play-overlay"><div class="play-circle" onclick="event.stopPropagation();openVideoModal(${p.id})">▶</div></div>
+      </div>
+      <div class="card-body">
+        <div class="card-title" title="${p.title}">${p.title}</div>
+        <div class="card-stats">
+          <span class="card-stat">👁 ${p.views}</span>
+          <span class="card-stat">♥ ${p.likes}</span>
+          <span class="card-stat">💬 ${p.comments}</span>
+        </div>
+        <div class="card-date">📅 ${p.date} · ${p.day}</div>
+        <div class="card-actions">
+          <button class="card-btn play" onclick="event.stopPropagation();openVideoModal(${p.id})">
+            <span class="btn-icon">▶️</span><span class="btn-label">Play</span>
+          </button>
+          <button class="card-btn share" onclick="event.stopPropagation();shareProject(${p.id})">
+            <span class="btn-icon">📤</span><span class="btn-label">Share</span>
+          </button>
+          <button class="card-btn download" onclick="event.stopPropagation();downloadProject(${p.id})">
+            <span class="btn-icon">⬇️</span><span class="btn-label">Save</span>
+          </button>
+          <button class="card-btn delete" onclick="event.stopPropagation();openDeleteModal(${p.id})">
+            <span class="btn-icon">🗑️</span><span class="btn-label">Del</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function selectProject(id) {
+  document.querySelectorAll('.project-card').forEach(c => c.classList.remove('selected'));
+  const card = document.getElementById('card-' + id);
+  if (card) card.classList.add('selected');
+}
+
+function filterProjects(q) {
+  const filtered = projects.filter(p => p.title.toLowerCase().includes(q.toLowerCase()));
+  renderProjects(filtered);
+}
+
+function filterByStatus(status) {
+  const filtered = status === 'all' ? projects : projects.filter(p => p.status === status);
+  renderProjects(filtered);
+}
+
+function saveProjects() {
+  localStorage.setItem('bcai_projects', JSON.stringify(projects));
+}
+
+// ─── VIDEO MODAL ──────────────────────────────────────
+function openVideoModal(id) {
+  const p = projects.find(x => x.id === id);
+  if (!p) return;
+  currentVideoTitle = p.title;
+  document.getElementById('videoModalTitle').textContent = p.title;
+  document.getElementById('videoStatusText').textContent = 'Click ▶ to play';
+  document.getElementById('videoProgress').style.width = '0%';
+  document.getElementById('timeDisplay').textContent = '0:00 / ' + p.duration;
+  document.getElementById('playPauseBtn').textContent = '▶️';
+  document.getElementById('mainPlayBtn').textContent = '▶';
+  isPlaying = false;
+  clearInterval(progressInterval);
+  document.getElementById('videoModal').classList.add('show');
+}
+function closeVideoModal() {
+  document.getElementById('videoModal').classList.remove('show');
+  clearInterval(progressInterval);
+  isPlaying = false;
+}
+function togglePlay() {
+  isPlaying = !isPlaying;
+  const btn = document.getElementById('playPauseBtn');
+  const mainBtn = document.getElementById('mainPlayBtn');
+  const statusText = document.getElementById('videoStatusText');
+  if (isPlaying) {
+    btn.textContent = '⏸️';
+    mainBtn.textContent = '⏸';
+    statusText.textContent = 'Playing…';
+    let progress = parseFloat(document.getElementById('videoProgress').style.width) || 0;
+    progressInterval = setInterval(() => {
+      progress += 0.5;
+      if (progress >= 100) { progress = 100; clearInterval(progressInterval); isPlaying = false; btn.textContent = '▶️'; mainBtn.textContent = '▶'; statusText.textContent = 'Playback complete'; }
+      document.getElementById('videoProgress').style.width = progress + '%';
+      const secs = Math.floor((progress / 100) * 165);
+      document.getElementById('timeDisplay').textContent = formatTime(secs) + ' / 2:45';
+    }, 100);
+  } else {
+    btn.textContent = '▶️';
+    mainBtn.textContent = '▶';
+    statusText.textContent = 'Paused';
+    clearInterval(progressInterval);
+  }
+}
+function toggleMute() { showToast('Toggled mute','info'); }
+function seekVideo(e) {
+  const bar = e.currentTarget;
+  const rect = bar.getBoundingClientRect();
+  const pct = ((e.clientX - rect.left) / rect.width) * 100;
+  document.getElementById('videoProgress').style.width = Math.max(0, Math.min(100, pct)) + '%';
+}
+function formatTime(s) { return Math.floor(s/60) + ':' + String(s%60).padStart(2,'0'); }
+function downloadFromModal() {
+  showToast('Downloading ' + currentVideoTitle + '.mp4…', 'success');
+  const a = document.createElement('a');
+  a.href = 'data:video/mp4;base64,AAAAIGZ0eXBpc29tAAACAGlzb21pc28yYXZjMW1wNDE=';
+  a.download = currentVideoTitle.replace(/[^a-z0-9]/gi,'_') + '.mp4';
+  a.click();
+}
+function shareFromModal() {
+  if (navigator.share) {
+    navigator.share({ title: currentVideoTitle, text: 'Check out this cinematic video by Bamania\'s Cine AI!', url: window.location.href });
+  } else {
+    navigator.clipboard.writeText(window.location.href).then(() => showToast('Link copied to clipboard!', 'success'));
+  }
+}
+
+// ─── DELETE ───────────────────────────────────────────
+function openDeleteModal(id) {
+  const p = projects.find(x => x.id === id);
+  deleteTargetId = id;
+  document.getElementById('deleteModalSub').textContent = `Delete "${p ? p.title : 'this project'}"? This cannot be undone.`;
+  document.getElementById('deleteModal').classList.add('show');
+}
+function closeDeleteModal() {
+  document.getElementById('deleteModal').classList.remove('show');
+  deleteTargetId = null;
+}
+function confirmDelete() {
+  if (deleteTargetId === null) return;
+  projects = projects.filter(p => p.id !== deleteTargetId);
+  saveProjects();
+  renderProjects(projects);
+  closeDeleteModal();
+  showToast('Project deleted successfully', 'success');
+}
+
+// ─── SHARE & DOWNLOAD ─────────────────────────────────
+function shareProject(id) {
+  const p = projects.find(x => x.id === id);
+  if (!p) return;
+  if (navigator.share) {
+    navigator.share({ title: p.title, text: 'Cinematic video by Bamania\'s Cine AI', url: window.location.href });
+  } else {
+    navigator.clipboard.writeText(window.location.href + '?v=' + id)
+      .then(() => showToast('Link copied!', 'success'))
+      .catch(() => showToast('Share link copied!', 'info'));
+  }
+}
+function downloadProject(id) {
+  const p = projects.find(x => x.id === id);
+  if (!p) return;
+  showToast('Downloading ' + p.title + '.mp4…', 'success');
+  setTimeout(() => {
+    const a = document.createElement('a');
+    a.href = 'data:video/mp4;base64,AAAAIGZ0eXBpc29tAAACAGlzb21pc28yYXZjMW1wNDE=';
+    a.download = p.title.replace(/[^a-z0-9]/gi,'_') + '.mp4';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  }, 500);
+}
+
+// ─── SCHEDULE MODAL ───────────────────────────────────
+function openScheduleModal() {
+  const today = new Date();
+  const yyyy = today.getFullYear();
+  const mm = String(today.getMonth()+1).padStart(2,'0');
+  const dd = String(today.getDate()+1).padStart(2,'0');
+  document.getElementById('scheduleDate').value = `${yyyy}-${mm}-${dd}`;
+  document.getElementById('scheduleTime').value = '18:00';
+  updateSchedulePreview();
+  document.getElementById('scheduleModal').classList.add('show');
+}
+function closeScheduleModal() {
+  document.getElementById('scheduleModal').classList.remove('show');
+}
+function updateSchedulePreview() {
+  const d = document.getElementById('scheduleDate').value;
+  const t = document.getElementById('scheduleTime').value;
+  if (d && t) {
+    const dt = new Date(d + 'T' + t);
+    document.getElementById('schedulePreview').textContent = '📅 Will publish on ' + dt.toLocaleDateString('en-IN', {weekday:'long',year:'numeric',month:'long',day:'numeric'}) + ' at ' + dt.toLocaleTimeString('en-IN', {hour:'2-digit',minute:'2-digit'});
+  }
+}
+document.getElementById('scheduleDate').addEventListener('input', updateSchedulePreview);
+document.getElementById('scheduleTime').addEventListener('input', updateSchedulePreview);
+function confirmSchedule() {
+  const d = document.getElementById('scheduleDate').value;
+  const t = document.getElementById('scheduleTime').value;
+  if (!d || !t) { showToast('Please select date and time', 'error'); return; }
+  const dt = new Date(d + 'T' + t);
+  if (dt <= new Date()) { showToast('Please select a future date/time', 'error'); return; }
+  closeScheduleModal();
+  showToast('Post scheduled for ' + dt.toLocaleDateString('en-IN', {month:'short',day:'numeric'}) + ' at ' + t + ' ✅', 'success');
+  document.getElementById('heroVidCount').textContent = String(parseInt(document.getElementById('heroVidCount').textContent) + 1);
+}
+
+// ─── GENERATION ───────────────────────────────────────
+const genStages = [
+  {name:'Analyzing Topic',icon:'🔍'},
+  {name:'Writing Hindi Script',icon:'✍️'},
+  {name:'Generating Scenes',icon:'🎬'},
+  {name:'Creating Visuals',icon:'🖼️'},
+  {name:'Voice Synthesis',icon:'🎙️'},
+  {name:'Video Composition',icon:'🎞️'}
+];
+function startGeneration() {
+  const btn = document.getElementById('generateBtn');
+  const wrap = document.getElementById('progressWrap');
+  const stagesEl = document.getElementById('progressStages');
+  btn.disabled = true;
+  document.getElementById('generateBtnIcon').textContent = '';
+  document.getElementById('generateBtnText').innerHTML = '<div class="spinner"></div> Generating…';
+  wrap.classList.add('show');
+  stagesEl.innerHTML = genStages.map((s,i) => `
+    <div class="progress-stage" id="gstage-${i}">
+      <div class="stage-icon" id="gicon-${i}">${s.icon}</div>
+      <div class="stage-info">
+        <div class="stage-name">${s.name}</div>
+        <div class="stage-bar"><div class="stage-fill" id="gbar-${i}" style="width:0%"></div></div>
+      </div>
+    </div>`).join('');
+  wrap.scrollIntoView({behavior:'smooth',block:'nearest'});
+  runGenStage(0);
+}
+function runGenStage(i) {
+  if (i >= genStages.length) { finishGeneration(); return; }
+  const icon = document.getElementById('gicon-'+i);
+  const bar = document.getElementById('gbar-'+i);
+  if (icon) icon.classList.add('active');
+  let pct = 0;
+  const iv = setInterval(() => {
+    pct += Math.random() * 15 + 5;
+    if (pct >= 100) {
+      pct = 100;
+      clearInterval(iv);
+      if (icon) { icon.classList.remove('active'); icon.classList.add('done'); icon.textContent = '✓'; }
+      setTimeout(() => runGenStage(i+1), 300);
+    }
+    if (bar) bar.style.width = Math.min(pct,100) + '%';
+  }, 150);
+}
+function finishGeneration() {
+  const topics = ['Morning Routine Secrets of High Performers','AI Tools That Replace Old Workflows','5 Habits That Changed My Life','3 Reel Hooks That Boost Watch Time'];
+  const emojis = ['🌅','🤖','💡','🎯'];
+  const bgs = ['linear-gradient(135deg,#1a1a2e,#16213e,#0f3460)','linear-gradient(135deg,#0d0d0d,#1a1a2e,#2d1b69)','linear-gradient(135deg,#0f2027,#203a43,#2c5364)','linear-gradient(135deg,#1a0a0a,#2e1010,#450a0a)'];
+  const idx = Math.floor(Math.random()*4);
+  const now = new Date();
+  const dateStr = now.toLocaleDateString('en-IN',{month:'short',day:'numeric',year:'numeric'}) + ' · ' + now.toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'});
+  const days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  const newProj = {
+    id: Date.now(),
+    title: document.getElementById('selectedTopicText')?.textContent || topics[idx],
+    emoji: emojis[idx], status:'Ready',
+    duration: Math.floor(Math.random()*120+30) + 's',
+    style:'Cinematic', res:'4K',
+    views:'0K', likes:'0K', comments:'0K',
+    date: dateStr, day: days[now.getDay()],
+    bg: bgs[idx]
+  };
+  projects.unshift(newProj);
+  saveProjects();
+  renderProjects(projects);
+  document.getElementById('progressWrap').classList.remove('show');
+  const btn = document.getElementById('generateBtn');
+  btn.disabled = false;
+  document.getElementById('generateBtnIcon').textContent = '⚡';
+  document.getElementById('generateBtnText').textContent = 'Generate Video';
+  document.getElementById('heroVidCount').textContent = String(parseInt(document.getElementById('heroVidCount').textContent) + 1);
+  showToast('🎬 "' + newProj.title + '" generated successfully!', 'success');
+  document.getElementById('generated-projects').scrollIntoView({behavior:'smooth'});
+}
+
+// ─── GENERATION OPTIONS ───────────────────────────────
+function selectOpt(el, group) {
+  const parent = el.closest('.gen-options, .style-grid, .voice-cards') || el.parentElement;
+  parent.querySelectorAll('.gen-opt,.style-card,.voice-card').forEach(e => e.classList.remove('active'));
+  el.classList.add('active');
+  updateOutputBar();
+}
+function updateOutputBar() {
+  const getActive = sel => {
+    const el = document.querySelector(sel + ' .gen-opt.active,.style-card.active');
+    return el ? el.textContent.trim().split('\n')[0] : '';
+  };
+  const len = document.querySelector('[onclick*="length"] .gen-opt.active');
+  const res = document.querySelector('[onclick*="res"] .gen-opt.active');
+  const ratio = document.querySelector('[onclick*="ratio"] .gen-opt.active');
+  if (len) document.getElementById('outLength').textContent = len.textContent.trim().split('\n')[0] + (len.textContent.includes('15') ? ' · 60s' : ' · 5min');
+  if (res) {
+    const resMap = {'HD':'HD · 1080p','2K':'2K · 1440p','4K':'4K · 2160p'};
+    document.getElementById('outRes').textContent = resMap[res.textContent.trim().split('\n')[0]] || res.textContent.trim().split('\n')[0];
+  }
+  if (ratio) {
+    const ratioMap = {'9:16':'9:16 · Shorts','16:9':'16:9 · YouTube','1:1':'1:1 · Square','4:5':'4:5 · Portrait'};
+    document.getElementById('outRatio').textContent = ratioMap[ratio.textContent.trim()] || ratio.textContent.trim();
+  }
+}
+
+// ─── TOPIC ───────────────────────────────────────────
+function useTopic(el, topic) {
+  document.querySelectorAll('.trend-card').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+  const banner = document.getElementById('selectedTopicBanner');
+  banner.style.display = 'flex';
+  document.getElementById('selectedTopicText').textContent = topic;
+  document.getElementById('scheduleTopicText').textContent = topic;
+  document.getElementById('genSection').scrollIntoView({behavior:'smooth',block:'nearest'});
+  showToast('Topic selected: ' + topic.substring(0,40) + '…', 'success');
+}
+function clearTopic() {
+  document.getElementById('selectedTopicBanner').style.display = 'none';
+  document.getElementById('selectedTopicText').textContent = '';
+  document.querySelectorAll('.trend-card').forEach(c => c.classList.remove('selected'));
+}
+function scrollToGen() {
+  document.getElementById('genSection').scrollIntoView({behavior:'smooth'});
+}
+
+// ─── REFRESH ─────────────────────────────────────────
+function refreshTrends() {
+  const btn = document.getElementById('refreshBtn');
+  const icon = document.getElementById('refreshIcon');
+  const text = document.getElementById('refreshText');
+  btn.disabled = true;
+  icon.classList.add('spin');
+  text.textContent = 'Refreshing…';
+  setTimeout(() => {
+    btn.disabled = false;
+    icon.classList.remove('spin');
+    text.textContent = 'Refresh Trends';
+    document.getElementById('lastUpdated').textContent = 'Last updated: just now';
+    countdownSeconds = 300;
+    showToast('Trends refreshed! 6 new items found', 'success');
+  }, 2000);
+}
+function startCountdown() {
+  if (countdownTimer) clearInterval(countdownTimer);
+  countdownTimer = setInterval(() => {
+    countdownSeconds--;
+    if (countdownSeconds <= 0) { countdownSeconds = 300; refreshTrends(); }
+    const m = Math.floor(countdownSeconds/60);
+    const s = countdownSeconds % 60;
+    const el = document.getElementById('countdown');
+    if (el) el.textContent = `⏱ Auto-refresh in ${m}:${String(s).padStart(2,'0')}`;
+  }, 1000);
+}
+
+// ─── VOICE ───────────────────────────────────────────
+const maleVoices = [{name:'Madhur',style:'News'},{name:'Prabhat',style:'Story'},{name:'Hemant',style:'Youth'}];
+const femaleVoices = [{name:'Swara',style:'News'},{name:'Kalpana',style:'Story'},{name:'Priya',style:'Youth'}];
+function selectGender(el, gender) {
+  document.querySelectorAll('.voice-gender-card').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  const voices = gender === 'male' ? maleVoices : femaleVoices;
+  const vc = document.getElementById('voiceCards');
+  if (vc) {
+    vc.innerHTML = voices.map((v,i) => `
+      <div class="voice-card ${i===0?'active':''}" onclick="selectVoice(this)">
+        ${v.name}<div style="font-size:9px;color:#6b7280">${v.style}</div>
+      </div>`).join('');
+  }
+}
+function selectVoice(el) {
+  document.querySelectorAll('.voice-card').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  showToast('Voice selected: ' + el.textContent.trim().split('\n')[0], 'info');
+}
+let voicePlaying = false;
+function testVoice(btn) {
+  voicePlaying = !voicePlaying;
+  const lbl = document.getElementById('testVoiceLbl');
+  const wf = document.getElementById('waveform');
+  if (voicePlaying) {
+    lbl.textContent = 'Playing…';
+    if (wf) wf.style.display = 'flex';
+    setTimeout(() => { voicePlaying = false; lbl.textContent = 'Test Hindi Voice'; if (wf) wf.style.display = 'none'; }, 3000);
+  } else {
+    lbl.textContent = 'Test Hindi Voice';
+    if (wf) wf.style.display = 'none';
+  }
+}
+
+// ─── TOGGLE SWITCH ───────────────────────────────────
+function toggleSwitch(el) {
+  el.classList.toggle('on');
+}
+
+// ─── SETTINGS TABS ───────────────────────────────────
+function switchSettingsTab(tab, el) {
+  document.querySelectorAll('.settings-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.settings-body').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+  const body = document.getElementById('stab-' + tab);
+  if (body) body.classList.add('active');
+}
+
+// ─── THUMBNAIL ───────────────────────────────────────
+const colorMap = {
+  '#7c3aed':['#7c3aed','#4c1d95'],
+  '#ef4444':['#ef4444','#991b1b'],
+  '#3b82f6':['#3b82f6','#1e40af'],
+  '#f59e0b':['#f59e0b','#92400e'],
+  '#22c55e':['#22c55e','#14532d'],
+  '#111827':['#111827','#030712']
+};
+function generateThumbnail() {
+  const canvas = document.getElementById('thumbCanvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  const colors = colorMap[selectedColor] || ['#7c3aed','#4c1d95'];
+  const grad = ctx.createLinearGradient(0,0,W,H);
+  grad.addColorStop(0, colors[0]);
+  grad.addColorStop(1, colors[1]);
+  ctx.fillStyle = grad;
+  ctx.fillRect(0,0,W,H);
+  // vignette
+  const vig = ctx.createRadialGradient(W/2,H/2,H*0.3,W/2,H/2,H*0.85);
+  vig.addColorStop(0,'rgba(0,0,0,0)');
+  vig.addColorStop(1,'rgba(0,0,0,0.7)');
+  ctx.fillStyle = vig;
+  ctx.fillRect(0,0,W,H);
+  // letterbox
+  ctx.fillStyle = 'rgba(0,0,0,0.85)';
+  ctx.fillRect(0,0,W,55);
+  ctx.fillRect(0,H-55,W,55);
+  // title
+  const title = document.getElementById('thumbTitle')?.textContent || 'Cinematic Video';
+  ctx.font = 'bold 64px Inter, sans-serif';
+  ctx.fillStyle = '#fff';
+  ctx.textAlign = 'center';
+  ctx.shadowColor = 'rgba(0,0,0,0.8)';
+  ctx.shadowBlur = 20;
+  const words = title.split(' ');
+  let line1 = '', line2 = '';
+  const mid = Math.ceil(words.length/2);
+  line1 = words.slice(0,mid).join(' ');
+  line2 = words.slice(mid).join(' ');
+  ctx.fillText(line1, W/2, H/2 - 20);
+  if (line2) ctx.fillText(line2, W/2, H/2 + 60);
+  // badge
+  ctx.fillStyle = colors[0];
+  ctx.beginPath();
+  ctx.roundRect(W/2-80,H-45,160,30,8);
+  ctx.fill();
+  ctx.font = 'bold 16px Inter, sans-serif';
+  ctx.fillStyle = '#fff';
+  ctx.fillText("Bamania's Cine AI", W/2, H-24);
+  ctx.shadowBlur = 0;
+}
+function downloadThumbnail() {
+  const canvas = document.getElementById('thumbCanvas');
+  if (!canvas) return;
+  const a = document.createElement('a');
+  a.href = canvas.toDataURL('image/png');
+  const title = document.getElementById('thumbTitle')?.textContent || 'thumbnail';
+  a.download = title.replace(/[^a-z0-9]/gi,'_') + '_thumbnail.png';
+  a.click();
+  showToast('Thumbnail downloaded!', 'success');
+}
+function selectStyle(el, style) {
+  document.querySelectorAll('.style-card').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  currentThumbStyle = style;
+}
+function selectColor(el, color) {
+  document.querySelectorAll('.color-swatch').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  selectedColor = color;
+}
+
+// ─── ANALYTICS CHART ─────────────────────────────────
+function renderChart() {
+  const vals = [12,18,9,24,16,22,27];
+  const days = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+  const max = Math.max(...vals);
+  const bars = document.getElementById('chartBars');
+  if (!bars) return;
+  bars.innerHTML = vals.map((v,i) => `
+    <div class="chart-bar-wrap">
+      <div style="font-size:10px;color:#a78bfa;margin-bottom:4px">${v}</div>
+      <div class="chart-bar" style="height:${Math.round((v/max)*100)}px"></div>
+      <div class="chart-label">${days[i]}</div>
+    </div>`).join('');
+}
+
+// ─── DAY BUTTONS ─────────────────────────────────────
+document.querySelectorAll('.day-btn').forEach(btn => {
+  btn.addEventListener('click', () => btn.classList.toggle('active'));
+});
+
+// ─── TOAST ───────────────────────────────────────────
+let toastTimer = null;
+function showToast(msg, type='info') {
+  const toast = document.getElementById('toast');
+  const icon = document.getElementById('toastIcon');
+  const msgEl = document.getElementById('toastMsg');
+  const icons = {success:'✅',error:'❌',info:'ℹ️'};
+  icon.textContent = icons[type] || 'ℹ️';
+  msgEl.textContent = msg;
+  toast.className = 'toast show ' + type;
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => { toast.classList.remove('show'); }, 3500);
+}
+
+// ─── INIT ─────────────────────────────────────────────
+renderProjects(projects);
+generateThumbnail();
+startCountdown();
+// keyboard shortcuts
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    closeVideoModal();
+    closeDeleteModal();
+    closeScheduleModal();
+  }
+  if (e.key === ' ' && document.getElementById('videoModal').classList.contains('show')) {
+    e.preventDefault();
+    togglePlay();
+  }
+});
+</script>
+</body>
+</html>

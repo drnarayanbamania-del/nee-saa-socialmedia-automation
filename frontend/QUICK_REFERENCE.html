@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quick Reference - Responsive Buttons</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="css/responsive_buttons.css" rel="stylesheet">
+</head>
+<body style="padding: 2rem; background: #0f0c29; color: white; font-family: Inter, sans-serif;">
+    
+    <h1 style="margin-bottom: 2rem;">Quick Reference - Copy & Paste</h1>
+    
+    <!-- Copy this into your project -->
+    <div style="background: rgba(255,255,255,0.05); padding: 1.5rem; border-radius: 1rem; margin-bottom: 2rem;">
+        <h2 style="margin-bottom: 1rem; color: #667eea;">Copy This Code:</h2>
+        <pre style="background: rgba(0,0,0,0.3); padding: 1rem; border-radius: 0.5rem; overflow-x: auto; font-size: 0.875rem;"><code>&lt;!-- Add to &lt;head&gt; --&gt;
+&lt;link href="css/responsive_buttons.css" rel="stylesheet"&gt;
+
+&lt;!-- Add to Projects Section --&gt;
+&lt;div class="project-actions"&gt;
+  &lt;button class="action-btn btn-view" onclick="viewVideo(video)"&gt;
+    &lt;i class="fas fa-eye btn-icon"&gt;&lt;/i&gt;
+    &lt;span class="btn-text"&gt;View&lt;/span&gt;
+  &lt;/button&gt;
+  &lt;button class="action-btn btn-share" onclick="shareVideo(video)"&gt;
+    &lt;i class="fas fa-share-alt btn-icon"&lt;/i&gt;
+    &lt;span class="btn-text"&gt;Share&lt;/span&gt;
+  &lt;/button&gt;
+  &lt;button class="action-btn btn-download" onclick="downloadVideo(video.id, video.title)"&gt;
+    &lt;i class="fas fa-download btn-icon"&gt;&lt;/i&gt;
+    &lt;span class="btn-text"&gt;Download&lt;/span&gt;
+  &lt;/button&gt;
+  &lt;button class="action-btn btn-delete" onclick="deleteVideo(video.id)"&gt;
+    &lt;i class="fas fa-trash btn-icon"&lt;/i&gt;
+    &lt;span class="btn-text"&gt;Delete&lt;/span&gt;
+  &lt;/button&gt;
+&lt;/div&gt;</code></pre>
+    </div>
+    
+    <!-- JavaScript Functions -->
+    <div style="background: rgba(255,255,255,0.05); padding: 1.5rem; border-radius: 1rem; margin-bottom: 2rem;">
+        <h2 style="margin-bottom: 1rem; color: #667eea;">Add These Functions:</h2>
+        <pre style="background: rgba(0,0,0,0.3); padding: 1rem; border-radius: 0.5rem; overflow-x: auto; font-size: 0.875rem;"><code>// View Video
+const viewVideo = (video) => {
+  setSelectedVideo(video);
+  document.getElementById('video-modal').classList.remove('hidden');
+};
+
+// Share Video
+const shareVideo = async (video) => {
+  if (navigator.share) {
+    await navigator.share({
+      title: video.title,
+      text: video.description,
+      url: window.location.origin + '/video/' + video.id
+    });
+  } else {
+    navigator.clipboard.writeText(window.location.origin + '/video/' + video.id);
+  }
+};
+
+// Download Video
+const downloadVideo = async (videoId, title) => {
+  const response = await fetch(`/api/videos/${videoId}/download`);
+  const blob = await response.blob();
+  const url = window.URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `${title}.mp4`;
+  a.click();
+};
+
+// Delete Video
+const deleteVideo = async (videoId) => {
+  if (confirm('Delete this video?')) {
+    await fetch(`/api/videos/${videoId}`, { method: 'DELETE' });
+    location.reload();
+  }
+};</code></pre>
+    </div>
+    
+    <!-- Live Demo -->
+    <div style="background: rgba(255,255,255,0.05); padding: 1.5rem; border-radius: 1rem; margin-bottom: 2rem;">
+        <h2 style="margin-bottom: 1rem; color: #667eea;">Live Demo:</h2>
+        
+        <div class="project-card-demo" style="max-width: 100%;">
+            <div style="background: linear-gradient(135deg, #667eea20, #764ba220); height: 150px; border-radius: 0.5rem; margin-bottom: 1rem; display: flex; align-items: center; justify-content: center;">
+                <i class="fas fa-video text-3xl" style="color: #667eea;"></i>
+            </div>
+            <h3 style="margin-bottom: 0.5rem; font-weight: 600;">Demo Video</h3>
+            <p style="font-size: 0.875rem; color: #94a3b8; margin-bottom: 1rem;">67s • 12.4 MB • Hindi</p>
+            
+            <div class="project-actions">
+                <button class="action-btn btn-view" onclick="alert('View clicked!')">
+                    <i class="fas fa-eye btn-icon"></i>
+                    <span class="btn-text">View</span>
+                </button>
+                <button class="action-btn btn-share" onclick="alert('Share clicked!')">
+                    <i class="fas fa-share-alt btn-icon"></i>
+                    <span class="btn-text">Share</span>
+                </button>
+                <button class="action-btn btn-download" onclick="alert('Download clicked!')">
+                    <i class="fas fa-download btn-icon"></i>
+                    <span class="btn-text">Download</span>
+                </button>
+                <button class="action-btn btn-delete" onclick="alert('Delete clicked!')">
+                    <i class="fas fa-trash btn-icon"></i>
+                    <span class="btn-text">Delete</span>
+                </button>
+            </div>
+        </div>
+        
+        <p style="margin-top: 1rem; font-size: 0.875rem; color: #94a3b8;">
+            <i class="fas fa-info-circle"></i> Resize your browser window to see responsiveness
+        </p>
+    </div>
+    
+    <!-- CSS Classes -->
+    <div style="background: rgba(255,255,255,0.05); padding: 1.5rem; border-radius: 1rem;">
+        <h2 style="margin-bottom: 1rem; color: #667eea;">Available Button Classes:</h2>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; font-size: 0.875rem;">
+            <div><code>.action-btn</code> - Base button</div>
+            <div><code>.btn-view</code> - View action</div>
+            <div><code>.btn-share</code> - Share action</div>
+            <div><code>.btn-download</code> - Download action</div>
+            <div><code>.btn-delete</code> - Delete action</div>
+            <div><code>.btn-icon</code> - Icon styling</div>
+            <div><code>.btn-text</code> - Text label</div>
+        </div>
+    </div>
+    
+    <footer style="text-align: center; margin-top: 2rem; padding-top: 2rem; border-top: 1px solid rgba(255,255,255,0.1); color: #94a3b8;">
+        <p><i class="fas fa-copyright"></i> 2024 Bamania's Cine AI</p>
+    </footer>
+</body>
+</html>

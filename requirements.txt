@@ -1,0 +1,62 @@
+# Bamania's Cine AI - Python Backend Requirements
+# Updated to latest stable versions (no deprecated packages)
+
+# ── Core API Framework ─────────────────────────────────────────────────────────
+fastapi==0.115.6
+uvicorn[standard]==0.34.0
+pydantic==2.10.4
+pydantic-settings==2.7.1
+python-multipart==0.0.20
+
+# ── Authentication ─────────────────────────────────────────────────────────────
+python-jose[cryptography]==3.3.0
+passlib[bcrypt]==1.7.4
+bcrypt==4.2.1
+
+# ── Database ───────────────────────────────────────────────────────────────────
+sqlalchemy==2.0.36
+asyncpg==0.30.0
+alembic==1.14.0
+
+# ── Redis / Queue ──────────────────────────────────────────────────────────────
+redis==5.2.1
+celery==5.4.0
+
+# ── HTTP Client ────────────────────────────────────────────────────────────────
+httpx==0.28.1
+aiohttp==3.11.11
+requests==2.32.3
+
+# ── AI / ML ────────────────────────────────────────────────────────────────────
+openai==1.59.4
+anthropic==0.42.0
+
+# ── Text to Speech ─────────────────────────────────────────────────────────────
+edge-tts==7.0.2
+pydub==0.25.1
+
+# ── Video Processing ───────────────────────────────────────────────────────────
+moviepy==1.0.3
+Pillow==11.1.0
+imageio==2.36.1
+imageio-ffmpeg==0.5.1
+
+# ── Scraping ───────────────────────────────────────────────────────────────────
+beautifulsoup4==4.12.3
+playwright==1.49.1
+httpx[http2]==0.28.1
+fake-useragent==2.0.3
+lxml==5.3.0
+
+# ── Utilities ──────────────────────────────────────────────────────────────────
+python-dotenv==1.0.1
+loguru==0.7.3
+tenacity==9.0.0
+pytz==2024.2
+python-dateutil==2.9.0.post0
+ujson==5.10.0
+orjson==3.10.13
+
+# ── CORS / Security ────────────────────────────────────────────────────────────
+python-cors==1.0.1
+cryptography==44.0.0

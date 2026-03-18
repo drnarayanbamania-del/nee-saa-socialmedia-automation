@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Progress Tracker - Studio AI</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: white;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .home-button {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .home-button:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .home-button-mobile {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 30px;
+            align-items: start;
+        }
+
+        .progress-section {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .progress-title {
+            font-size: 24px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .stage {
+            margin-bottom: 25px;
+            opacity: 0.5;
+            transition: all 0.3s ease;
+        }
+
+        .stage.active {
+            opacity: 1;
+            transform: scale(1.02);
+        }
+
+        .stage.completed {
+            opacity: 0.8;
+        }
+
+        .stage-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .stage-name {
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .stage-status {
+            font-size: 12px;
+            padding: 4px 8px;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .progress-bar-container {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+            height: 8px;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #f093fb 0%, #f5576c 100%);
+            width: 0%;
+            transition: width 0.5s ease;
+            border-radius: 10px;
+        }
+
+        .percentage {
+            font-size: 12px;
+            margin-top: 5px;
+            text-align: right;
+            opacity: 0.8;
+        }
+
+        .controls {
+            margin-top: 40px;
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .sidebar {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            position: sticky;
+            top: 20px;
+        }
+
+        .video-preview {
+            width: 100%;
+            aspect-ratio: 9/16;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .video-placeholder {
+            text-align: center;
+            opacity: 0.7;
+        }
+
+        .video-placeholder img {
+            width: 60px;
+            height: 60px;
+            margin-bottom: 10px;
+            opacity: 0.5;
+        }
+
+        .video-info {
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .info-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+
+        .status-message {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 16px 24px;
+            border-radius: 8px;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            backdrop-filter: blur(10px);
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+            z-index: 1001;
+            max-width: 300px;
+        }
+
+        .status-message.show {
+            transform: translateX(0);
+        }
+
+        .status-message.success {
+            background: rgba(34, 197, 94, 0.9);
+        }
+
+        .status-message.error {
+            background: rgba(239, 68, 68, 0.9);
+        }
+
+        .status-message.info {
+            background: rgba(59, 130, 246, 0.9);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                position: static;
+                margin-top: 30px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .logo {
+                font-size: 24px;
+            }
+
+            .home-button {
+                display: none;
+            }
+
+            .home-button-mobile {
+                display: flex;
+            }
+
+            .progress-title {
+                font-size: 20px;
+            }
+
+            .stage-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 5px;
+            }
+
+            .controls {
+                flex-direction: column;
+                width: 100%;
+            }
+
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .video-preview {
+                max-width: 300px;
+                margin: 0 auto 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .progress-section {
+                padding: 20px;
+            }
+
+            .container {
+                padding: 10px;
+            }
+
+            .logo {
+                font-size: 20px;
+            }
+        }
+
+        /* Animations */
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .spinner {
+            animation: spin 1s linear infinite;
+        }
+
+        /* Breadcrumb */
+        .breadcrumb {
+            margin-bottom: 20px;
+            font-size: 14px;
+            opacity: 0.8;
+        }
+
+        .breadcrumb a {
+            color: white;
+            text-decoration: none;
+        }
+
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="breadcrumb">
+            <a href="dashboard_pro.html">🏠 Home</a> > <a href="#">Progress Tracker</a>
+        </div>
+
+        <header class="header">
+            <h1 class="logo">स्टूडियो AI</h1>
+            <a href="dashboard_pro.html" class="home-button">
+                🏠 Home
+            </a>
+        </header>
+
+        <main class="main-content">
+            <section class="progress-section">
+                <h2 class="progress-title">🎬 Generating Cinematic Video</h2>
+
+                <div class="stage" data-stage="1">
+                    <div class="stage-header">
+                        <div class="stage-name">
+                            <span class="stage-icon">🔍</span>
+                            <span>Analyzing Topic</span>
+                        </div>
+                        <div class="stage-status">⏳ Pending</div>
+                    </div>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar"></div>
+                    </div>
+                    <div class="percentage">0%</div>
+                </div>
+
+                <div class="stage" data-stage="2">
+                    <div class="stage-header">
+                        <div class="stage-name">
+                            <span class="stage-icon">📝</span>
+                            <span>Writing Script</span>
+                        </div>
+                        <div class="stage-status">⏳ Pending</div>
+                    </div>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar"></div>
+                    </div>
+                    <div class="percentage">0%</div>
+                </div>
+
+                <div class="stage" data-stage="3">
+                    <div class="stage-header">
+                        <div class="stage-name">
+                            <span class="stage-icon">🎬</span>
+                            <span>Generating Scenes</span>
+                        </div>
+                        <div class="stage-status">⏳ Pending</div>
+                    </div>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar"></div>
+                    </div>
+                    <div class="percentage">0%</div>
+                </div>
+
+                <div class="stage" data-stage="4">
+                    <div class="stage-header">
+                        <div class="stage-name">
+                            <span class="stage-icon">🖼️</span>
+                            <span>Creating Visuals</span>
+                        </div>
+                        <div class="stage-status">⏳ Pending</div>
+                    </div>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar"></div>
+                    </div>
+                    <div class="percentage">0%</div>
+                </div>
+
+                <div class="stage" data-stage="5">
+                    <div class="stage-header">
+                        <div class="stage-name">
+                            <span class="stage-icon">🎤</span>
+                            <span>Voice Synthesis</span>
+                        </div>
+                        <div class="stage-status">⏳ Pending</div>
+                    </div>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar"></div>
+                    </div>
+                    <div class="percentage">0%</div>
+                </div>
+
+                <div class="stage" data-stage="6">
+                    <div class="stage-header">
+                        <div class="stage-name">
+                            <span class="stage-icon">🎞️</span>
+                            <span>Video Composition</span>
+                        </div>
+                        <div class="stage-status">⏳ Pending</div>
+                    </div>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar"></div>
+                    </div>
+                    <div class="percentage">0%</div>
+                </div>
+
+                <div class="controls">
+                    <button class="btn btn-primary" id="generateBtn">
+                        🎬 Generate Video
+                    </button>
+                    <button class="btn btn-secondary" id="cancelBtn" disabled>
+                        ⏹️ Cancel
+                    </button>
+                </div>
+            </section>
+
+            <aside class="sidebar">
+                <div class="video-preview">
+                    <div class="video-placeholder">
+                        <div style="font-size: 48px; margin-bottom: 10px;">🎬</div>
+                        <div>Video Preview</div>
+                        <div style="font-size: 12px; margin-top: 5px;">Will appear here</div>
+                    </div>
+                </div>
+
+                <div class="video-info">
+                    <div class="info-item">
+                        <span>Status:</span>
+                        <span id="videoStatus">Ready</span>
+                    </div>
+                    <div class="info-item">
+                        <span>Duration:</span>
+                        <span id="videoDuration">-</span>
+                    </div>
+                    <div class="info-item">
+                        <span>Quality:</span>
+                        <span>1080x1920</span>
+                    </div>
+                    <div class="info-item">
+                        <span>Language:</span>
+                        <span>Hindi</span>
+                    </div>
+                </div>
+            </aside>
+        </main>
+
+        <button class="home-button-mobile" onclick="goHome()" title="Home">
+            🏠
+        </button>
+
+        <div class="status-message" id="statusMessage"></div>
+    </div>
+
+    <script>
+        // Global configuration - auto-detect environment
+        const getApiUrl = () => {
+            // Vercel deployment
+            if (window.location.hostname.includes('vercel.app')) {
+                return `https://${window.location.hostname}`;
+            }
+            // Custom domain
+            if (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
+                return `https://${window.location.hostname}`;
+            }
+            // Local development
+            return 'http://localhost:8000';
+        };
+        
+        const CONFIG = {
+            API_BASE_URL: getApiUrl(),
+            WS_BASE_URL: getApiUrl().replace('http', 'ws'),
+            ADMIN_API_KEY: 'sk-admin-key-12345'  // Change this in production
+        };
+        
+        console.log('📡 API_URL:', CONFIG.API_BASE_URL);
+        
+        // Animation utilities
+        const animateValue = (element, start, end, duration) => {
+            const startTime = performance.now();
+            const update = (currentTime) => {
+                const elapsed = currentTime - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+                const current = Math.floor(start + (end - start) * progress);
+                element.textContent = current + '%';
+                if (progress < 1) requestAnimationFrame(update);
+            };
+            requestAnimationFrame(update);
+        };
+
+        // Stage configurations
+        const STAGES = [
+            { name: 'Analyzing Topic', icon: '🔍', duration: 3000 },
+            { name: 'Writing Script', icon: '📝', duration: 8000 },
+            { name: 'Generating Scenes', icon: '🎬', duration: 5000 },
+            { name: 'Creating Visuals', icon: '🖼️', duration: 25000 },
+            { name: 'Voice Synthesis', icon: '🎤', duration: 12000 },
+            { name: 'Video Composition', icon: '🎞️', duration: 20000 }
+        ];
+
+        let currentStage = 0;
+        let isGenerating = false;
+        let jobId = null;
+
+        // DOM elements
+        const generateBtn = document.getElementById('generateBtn');
+        const cancelBtn = document.getElementById('cancelBtn');
+        const statusMessage = document.getElementById('statusMessage');
+
+        // Show status message
+        function showStatus(message, type = 'info') {
+            statusMessage.textContent = message;
+            statusMessage.className = `status-message show ${type}`;
+            setTimeout(() => {
+                statusMessage.classList.remove('show');
+            }, 5000);
+        }
+
+        // Update stage UI
+        function updateStage(stageIndex, status, percentage, message = '') {
+            const stage = document.querySelector(`[data-stage="${stageIndex + 1}"]`);
+            const progressBar = stage.querySelector('.progress-bar');
+            const percentageText = stage.querySelector('.percentage');
+            const statusText = stage.querySelector('.stage-status');
+
+            // Update visual state
+            stage.classList.remove('active', 'completed');
+            
+            if (status === 'completed') {
+                stage.classList.add('completed');
+                statusText.textContent = '✅ Complete';
+                progressBar.style.width = '100%';
+                percentageText.textContent = '100%';
+            } else if (status === 'in_progress') {
+                stage.classList.add('active');
+                statusText.textContent = '🟡 In Progress';
+                progressBar.style.width = percentage + '%';
+                animateValue(percentageText, 0, percentage, 500);
+            } else {
+                statusText.textContent = '⏳ Pending';
+                progressBar.style.width = '0%';
+                percentageText.textContent = '0%';
+            }
+
+            if (message) {
+                showStatus(message, 'info');
+            }
+        }
+
+        // Simulate progress (replace with real API calls)
+        async function simulateProgress() {
+            for (let i = 0; i < STAGES.length; i++) {
+                if (!isGenerating) break;
+                
+                currentStage = i;
+                updateStage(i, 'in_progress', 50, `Starting: ${STAGES[i].name}`);
+                
+                // Simulate work
+                await new Promise(resolve => setTimeout(resolve, STAGES[i].duration));
+                
+                if (!isGenerating) break;
+                updateStage(i, 'completed', 100, `Completed: ${STAGES[i].name}`);
+                
+                // Wait between stages
+                await new Promise(resolve => setTimeout(resolve, 500));
+            }
+        }
+
+        // Generate video
+        async function generateVideo() {
+            if (isGenerating) return;
+            
+            isGenerating = true;
+            jobId = 'demo_' + Date.now();
+            
+            // Reset UI
+            document.querySelectorAll('.stage').forEach(stage => {
+                stage.classList.remove('completed', 'active');
+                const progressBar = stage.querySelector('.progress-bar');
+                const percentageText = stage.querySelector('.percentage');
+                const statusText = stage.querySelector('.stage-status');
+                progressBar.style.width = '0%';
+                percentageText.textContent = '0%';
+                statusText.textContent = '⏳ Pending';
+            });
+            
+            generateBtn.disabled = true;
+            cancelBtn.disabled = false;
+            showStatus('🎬 Starting video generation...', 'info');
+            
+            try {
+                // For real implementation, uncomment this:
+                /*
+                const response = await fetch(`${CONFIG.API_BASE_URL}/api/v1/video/generate-sync`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${CONFIG.ADMIN_API_KEY}`
+                    },
+                    body: JSON.stringify({
+                        topic: 'morning routine success'
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.status === 'success') {
+                    showStatus('✅ Video generated successfully!', 'success');
+                } else {
+                    showStatus('❌ Error: ' + data.message, 'error');
+                }
+                */
+                
+                // Demo: Simulate progress
+                await simulateProgress();
+                
+                if (isGenerating) {
+                    showStatus('✅ Video generated successfully!', 'success');
+                    document.getElementById('videoStatus').textContent = 'Complete';
+                    document.getElementById('videoDuration').textContent = '67s';
+                }
+                
+            } catch (error) {
+                console.error('Error:', error);
+                showStatus('❌ Error generating video: ' + error.message, 'error');
+            } finally {
+                isGenerating = false;
+                generateBtn.disabled = false;
+                cancelBtn.disabled = true;
+            }
+        }
+
+        // Cancel generation
+        function cancelGeneration() {
+            isGenerating = false;
+            showStatus('⏹️ Generation cancelled', 'info');
+            generateBtn.disabled = false;
+            cancelBtn.disabled = true;
+        }
+
+        // Go home
+        function goHome() {
+            window.location.href = 'dashboard_pro.html';
+        }
+
+        // Event listeners
+        generateBtn.addEventListener('click', generateVideo);
+        cancelBtn.addEventListener('click', cancelGeneration);
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'h' || e.key === 'H') {
+                goHome();
+            } else if (e.key === 'g' || e.key === 'G') {
+                generateVideo();
+            } else if (e.key === 'c' || e.key === 'C') {
+                cancelGeneration();
+            }
+        });
+
+        // Initialize
+        showStatus('🚀 Ready to generate cinematic videos!', 'info');
+        console.log('🎬 Progress tracker initialized');
+        console.log('📡 API Endpoint:', CONFIG.API_BASE_URL);
+    </script>
+</body>
+</html>

@@ -1,0 +1,177 @@
+version: '3.8'
+
+services:
+  # Main API Service
+  api:
+    build: .
+    container_name: cinematic-api
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=postgresql://cinematic_user:cinematic_pass@db:5432/cinematic_factory
+      - REDIS_URL=redis://redis:6379/0
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - ELEVENLABS_API_KEY=${ELEVENLABS_API_KEY}
+      - ADMIN_API_KEY=${ADMIN_API_KEY:-sk-admin-cinematic-2024}
+      - LOG_LEVEL=INFO
+      - ENABLE_METRICS=true
+    volumes:
+      - ./output:/app/output
+      - ./logs:/app/logs
+      - ./assets:/app/assets
+      - ./workflows:/app/workflows
+    depends_on:
+      - db
+      - redis
+    networks:
+      - cinematic-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Database Service
+  db:
+    image: postgres:15-alpine
+    container_name: cinematic-db
+    environment:
+      - POSTGRES_DB=cinematic_factory
+      - POSTGRES_USER=cinematic_user
+      - POSTGRES_PASSWORD=cinematic_pass
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "5432:5432"
+    networks:
+      - cinematic-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U cinematic_user -d cinematic_factory"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Redis Service (for caching and queues)
+  redis:
+    image: redis:7-alpine
+    container_name: cinematic-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - cinematic-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+
+  # Worker Service (for background processing)
+  worker:
+    build: .
+    container_name: cinematic-worker
+    command: python -m automation.worker
+    environment:
+      - DATABASE_URL=postgresql://cinematic_user:cinematic_pass@db:5432/cinematic_factory
+      - REDIS_URL=redis://redis:6379/0
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - ELEVENLABS_API_KEY=${ELEVENLABS_API_KEY}
+      - LOG_LEVEL=INFO
+    volumes:
+      - ./output:/app/output
+      - ./logs:/app/logs
+      - ./assets:/app/assets
+    depends_on:
+      - db
+      - redis
+    networks:
+      - cinematic-network
+    restart: unless-stopped
+    deploy:
+      replicas: 3  # Scale workers as needed
+
+  # Nginx Reverse Proxy (for production)
+  nginx:
+    image: nginx:alpine
+    container_name: cinematic-nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./frontend:/usr/share/nginx/html:ro
+    depends_on:
+      - api
+    networks:
+      - cinematic-network
+    restart: unless-stopped
+
+  # Monitoring (Prometheus)
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: cinematic-prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    networks:
+      - cinematic-network
+    restart: unless-stopped
+
+  # Monitoring (Grafana)
+  grafana:
+    image: grafana/grafana:latest
+    container_name: cinematic-grafana
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD:-admin123}
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./monitoring/grafana/dashboards:/etc/grafana/provisioning/dashboards:ro
+      - ./monitoring/grafana/datasources:/etc/grafana/provisioning/datasources:ro
+    networks:
+      - cinematic-network
+    restart: unless-stopped
+
+# Volumes for persistent data
+volumes:
+  postgres_data:
+    driver: local
+  redis_data:
+    driver: local
+  grafana_data:
+    driver: local
+
+# Networks
+networks:
+  cinematic-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
+
+# Deployment configurations
+configs:
+  # Resource limits for production
+  resources:
+    limits:
+      cpus: '4'
+      memory: 8G
+    reservations:
+      cpus: '2'
+      memory: 4G
+
+# Health check for the entire stack
+healthcheck:
+  test: ["CMD", "curl", "-f", "http://api:8000/health"]
+  interval: 1m30s
+  timeout: 10s
+  retries: 3
+  start_period: 40s
